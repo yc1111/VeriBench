@@ -1,23 +1,51 @@
 #!/bin/bash
 
+###########################
 # workload configurations
-workload="tpcc"
+###########################
+
+# workload name (same as the folder name under workload/)
+workload="smallbank"
+# configuration file name under workload/<workload>/conf/ folder, if any
 wlconfig="balanced"
+# workload init data file path, if any
 initdata="/data/yc/ustore/tpcc/tpcc"
 
+###########################
 # database configurations
+###########################
+
+# database name (same as the folder name under dbadaptor/)
 database="ledgerdb"
+# configuratino file name under dbadapter/<database>/conf/ folder, if any
 dbconfig="config.properties"
 
+###########################
 # experiment configurations
+###########################
+
+# number of shards
 nshard=16
+# number of client process per client node
 nclient=10
+# number of thread per client process for task generation
 nthread=10
-txnrate=120
+# task generation rate for each thread
+request_rate=120
+# experiment duration
 duration=120
+# verification interval for deferred verification
 delay=1000
+# block creation interval
 blocktime=100
+# wait time when the cluster is booted
 wait_boot=10
+# node to start exp and collect results
+master=10.10.10.206
+
+###########################
+# path configurations
+###########################
 
 # project root
 root_dir=`pwd`/..
@@ -33,13 +61,11 @@ db_config_file="$root_dir/dbadapter/$database/conf/$dbconfig"
 wl_config_file="$root_dir/workload/$workload/conf/$wlconfig"
 # experiment path
 exp_dir="$root_dir/exps"
+# analyzer path
+ana_dir="$root_dir/analyzer/$workload"
 # log path
 log_dir="/data/yc/logs"
 # result path
 res_dir="/data/yc/results"
-# analyzer path
-ana_dir="$root_dir/analyzer/$workload"
-
 # Machines running.
 clients=`cat $db_config_dir/clients`
-master=10.10.10.206

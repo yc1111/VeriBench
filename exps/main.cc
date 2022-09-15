@@ -8,6 +8,7 @@
 #include "workload.h"
 #include "ycsb/ycsb.h"
 #include "tpcc/tpcc.h"
+#include "smallbank/smallbank.cc"
 
 using namespace std;
 
@@ -111,7 +112,7 @@ int main(int argc, char **argv) {
   const char *workloadConfigPath = NULL;
 
   // experimental config
-  int txnRate = 10;
+  int request_rate = 10;
   int nThread = 10;
   int duration = 10;
   size_t delay = 0;
@@ -126,8 +127,8 @@ int main(int argc, char **argv) {
     case 'r': // request rate
     {
       char *strtolPtr;
-      txnRate = strtol(optarg, &strtolPtr, 10);
-      if ((*optarg == '\0') || (*strtolPtr != '\0') || (txnRate < 0)) {
+      request_rate = strtol(optarg, &strtolPtr, 10);
+      if ((*optarg == '\0') || (*strtolPtr != '\0') || (request_rate < 0)) {
         UsageMessage(argv[0]);
         return 0;
       }
@@ -200,10 +201,12 @@ int main(int argc, char **argv) {
     wl.reset(new ledgerbench::YCSB(workloadConfigPath));
   } else if (workloadType.compare("tpcc") == 0) {
     wl.reset(new ledgerbench::TPCC());
+  } else if (workloadType.compare("smallbank") == 0) {
+    wl.reset(new ledgerbench::SmallBank());
   }
 
   std::vector<std::future<int>> actual_ops;
-  int interval = 1000 / txnRate;
+  int interval = 1000 / request_rate;
   for (int i = 0; i < nThread; ++i) {
     actual_ops.emplace_back(std::async(std::launch::async, taskGenerator, wl.get(), interval));
   }

@@ -525,4 +525,4 @@ int TPCC::execStockLevel(const TPCCTask* task, DB* db, Promise* promise) {
   return 0;
 }
 
-}
+}  // namespace ledgerbench

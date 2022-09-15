@@ -14,7 +14,7 @@ echo "database: $database"
 echo "database config path: $dbconfig"
 echo "#shards: $nshard"
 echo "#clients: $nclient"
-echo "request rate: $txnrate"
+echo "request rate: $request_rate"
 echo "delay: $delay"
 echo "block time: $blocktime"
 echo "init versions: $version"
@@ -32,7 +32,7 @@ do
   ssh $host "source ~/.profile; mkdir -p $log_dir; \
       $exp_dir/start_multiple_clients.sh \
           \"$bin_dir/run \
-              -r $txnrate -t $nthread -D $duration -d $delay -w $workload \
+              -r $request_rate -t $nthread -D $duration -d $delay -w $workload \
               -W $wl_config_file -s $database -c $db_config_file \" \
           $count $nclient $log_dir"
 
