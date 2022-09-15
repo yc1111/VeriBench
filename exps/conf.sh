@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # workload configurations
-workload="ycsb"
+workload="tpcc"
 wlconfig="balanced"
+initdata="/data/yc/ustore/tpcc/tpcc"
 
 # database configurations
 database="ledgerdb"
@@ -10,12 +11,13 @@ dbconfig="config.properties"
 
 # experiment configurations
 nshard=16
-nclient=20
+nclient=10
 nthread=10
 txnrate=120
 duration=120
 delay=1000
 blocktime=100
+wait_boot=10
 
 # project root
 root_dir=`pwd`/..

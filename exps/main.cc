@@ -7,6 +7,7 @@
 #include "ledgerdb/ledgerdb.h"
 #include "workload.h"
 #include "ycsb/ycsb.h"
+#include "tpcc/tpcc.h"
 
 using namespace std;
 
@@ -197,6 +198,8 @@ int main(int argc, char **argv) {
   std::unique_ptr<ledgerbench::Workload> wl;
   if (workloadType.compare("ycsb") == 0) {
     wl.reset(new ledgerbench::YCSB(workloadConfigPath));
+  } else if (workloadType.compare("tpcc") == 0) {
+    wl.reset(new ledgerbench::TPCC());
   }
 
   std::vector<std::future<int>> actual_ops;
@@ -207,5 +210,5 @@ int main(int argc, char **argv) {
 
   actual_ops.emplace_back(std::async(std::launch::async, txnThread, wl.get(), db.get(), duration));
 
-  actual_ops.emplace_back(std::async(std::launch::async, verifyThread, db.get(), delay));
+  // actual_ops.emplace_back(std::async(std::launch::async, verifyThread, db.get(), delay));
 }

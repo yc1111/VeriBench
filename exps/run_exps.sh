@@ -22,7 +22,7 @@ echo "init versions: $version"
 # Start all servers
 $db_config_dir/start_server.sh
 
-sleep 10
+sleep $wait_boot
 
 # Run the clients
 echo "Running the client(s)"
@@ -32,7 +32,7 @@ do
   ssh $host "source ~/.profile; mkdir -p $log_dir; \
       $exp_dir/start_multiple_clients.sh \
           \"$bin_dir/run \
-              -r $txnrate -t $nthread -D $duration -d $delay -w ycsb \
+              -r $txnrate -t $nthread -D $duration -d $delay -w $workload \
               -W $wl_config_file -s $database -c $db_config_file \" \
           $count $nclient $log_dir"
 

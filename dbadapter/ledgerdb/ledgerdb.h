@@ -31,6 +31,10 @@ class LedgerDB : public DB {
           std::vector<std::string>& vals,
           Promise* promise);
 
+  int Get(const std::string& key,
+          std::string* vals,
+          Promise* promise);
+
   void Put(const std::vector<std::string>& keys,
            const std::vector<std::string>& vals);
 

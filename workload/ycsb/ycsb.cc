@@ -53,9 +53,8 @@ int YCSB::ExecuteTxn(Task* task, DB* client, Promise* promise) {
   if (t->op == 1) {
     client->Put({t->key}, {t->val});
   } else if (t->op == 0) {
-    std::vector<std::string> keys, vals;
-    keys.emplace_back(t->key);
-    client->Get(keys, vals, promise);
+    std::string value;
+    client->Get(t->key, &value, promise);
   } else {
     client->Provenance(t->key, t->n);
   }

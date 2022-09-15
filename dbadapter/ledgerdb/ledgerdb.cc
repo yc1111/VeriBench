@@ -40,22 +40,27 @@ void LedgerDB::Abort() {
 }
 
 int LedgerDB::Get(const std::vector<std::string>& keys,
-                   std::vector<std::string>& vals,
-                   Promise* promise) {
-  // std::map<int, std::map<uint64_t, std::vector<std::string>>> unverified_list;
-  // for (size_t i = 0; i < keys.size(); ++i) {
-  //   client->BufferKey(keys[i]);
-  // }
-  // std::map<std::string, std::string> values;
-  // auto status = client->BatchGet(values, unverified_list);
-  // for (size_t i = 0; i < keys.size(); ++i) {
-  //   vals.emplace_back(values[keys[i]]);
-  // }
-
+                  std::vector<std::string>& vals,
+                  Promise* promise) {
+  std::map<int, std::map<uint64_t, std::vector<std::string>>> unverified_list;
   for (size_t i = 0; i < keys.size(); ++i) {
-    client->Get(keys[i]);
+    client->BufferKey(keys[i]);
   }
-  return 0;
+  std::map<std::string, std::string> values;
+  auto status = client->BatchGet(values);
+  for (size_t i = 0; i < keys.size(); ++i) {
+    vals.emplace_back(values[keys[i]]);
+  }
+
+  // for (size_t i = 0; i < keys.size(); ++i) {
+  //   client->Get(keys[i]);
+  // }
+  return status;
+}
+
+int LedgerDB::Get(const std::string& key, std::string* vals,
+                  Promise* promise) {
+  return client->Get(key);
 }
 
 void LedgerDB::Put(const std::vector<std::string>& keys,

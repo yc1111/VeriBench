@@ -22,6 +22,10 @@ class DB {
                   std::vector<std::string>& vals,
                   Promise* promise) = 0;
 
+  virtual int Get(const std::string& key,
+                  std::string* vals,
+                  Promise* promise) = 0;
+
   virtual void Put(const std::vector<std::string>& keys,
                    const std::vector<std::string>& vals) = 0;
 
