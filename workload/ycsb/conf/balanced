@@ -1,4 +1,6 @@
 rowno=100000
 readpercentage=50
 writepercentage=50
+provenancepercentage=0
+rangepercentage=0
 theta=0

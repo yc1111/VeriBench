@@ -42,7 +42,6 @@ void LedgerDB::Abort() {
 int LedgerDB::Get(const std::vector<std::string>& keys,
                   std::vector<std::string>& vals,
                   Promise* promise) {
-  std::map<int, std::map<uint64_t, std::vector<std::string>>> unverified_list;
   for (size_t i = 0; i < keys.size(); ++i) {
     client->BufferKey(keys[i]);
   }
@@ -72,6 +71,16 @@ void LedgerDB::Put(const std::vector<std::string>& keys,
 
 void LedgerDB::Provenance(const std::string& key, int n) {
   client->GetNVersions(key, n);
+}
+
+int LedgerDB::Range(const std::string& from,
+                     const std::string& to,
+                     std::map<std::string, std::string>& values,
+                     Promise* promise) {
+  std::map<int, std::map<uint64_t, std::vector<std::string>>> unverified_list;
+  auto status = client->GetRange(from, to, values, unverified_list);
+  Merge(unverified_list, promise);
+  return status;
 }
 
 bool LedgerDB::Verify(Promise* promise) {

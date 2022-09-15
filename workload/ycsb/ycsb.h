@@ -11,6 +11,8 @@ namespace ledgerbench {
 struct YCSBTask : public Task {
   std::string key;
   std::string val;
+  std::string from;
+  std::string to;
   int n;
 };
 
@@ -33,6 +35,7 @@ class YCSB : public Workload {
   double zeta_2_theta;
   int readperc;
   int writeperc;
+  int provperc;
 };
 
 }  // namespace ledgerbench

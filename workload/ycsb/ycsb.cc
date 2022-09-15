@@ -22,6 +22,7 @@ YCSB::YCSB(const char* config) {
   row_num = std::stoul(props["rowno"]);
   readperc = std::stoi(props["readpercentage"]);
   writeperc = std::stoi(props["writepercentage"]);
+  provperc = std::stoi(props["provenancepercentage"]);
   theta = std::stod(props["theta"]);
   timeval t0;
   gettimeofday(&t0, NULL);
@@ -40,9 +41,16 @@ std::unique_ptr<Task> YCSB::NextTask() {
     task->op = 1;
   } else if (roll < writeperc + readperc) {
     task->op = 0;
-  } else {
+  } else if (roll < writeperc + readperc + provperc) {
     task->op = 2;
     task->n = rand() % 10;
+  } else {
+    task->op = 3;
+    auto from = rand() % 89999 + 10000;
+    auto range = rand() % 10 + 10;
+    auto to = from + range;
+    task->from = std::to_string(from);
+    task->to = std::to_string(to);
   }
   return task;
 }
@@ -55,8 +63,11 @@ int YCSB::ExecuteTxn(Task* task, DB* client, Promise* promise) {
   } else if (t->op == 0) {
     std::string value;
     client->Get(t->key, &value, promise);
-  } else {
+  } else if (t->op == 2) {
     client->Provenance(t->key, t->n);
+  } else {
+    std::map<std::string, std::string> result;
+    client->Range(t->from, t->to, result, promise);
   }
   return client->Commit(promise);
 }

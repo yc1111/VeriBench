@@ -40,6 +40,11 @@ class LedgerDB : public DB {
 
   void Provenance(const std::string& keys, int n);
 
+  int Range(const std::string& from,
+            const std::string& to,
+            std::map<std::string, std::string>& values,
+            Promise* promise);
+
   bool Verify(Promise* promise);
  private:
   void Merge(const

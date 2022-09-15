@@ -5,7 +5,7 @@
 ###########################
 
 # workload name (same as the folder name under workload/)
-workload="smallbank"
+workload="ycsb"
 # configuration file name under workload/<workload>/conf/ folder, if any
 wlconfig="balanced"
 # workload init data file path, if any

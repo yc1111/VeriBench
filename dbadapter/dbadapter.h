@@ -2,6 +2,7 @@
 #define DBADAPTER_H
 
 #include <vector>
+#include <map>
 #include <string>
 
 namespace ledgerbench {
@@ -30,6 +31,11 @@ class DB {
                    const std::vector<std::string>& vals) = 0;
 
   virtual void Provenance(const std::string& keys, int n) = 0;
+
+  virtual int Range(const std::string& from,
+                    const std::string& to,
+                    std::map<std::string, std::string>& values,
+                    Promise* promise) = 0;
 
   virtual bool Verify(Promise* promise) = 0;
 };
