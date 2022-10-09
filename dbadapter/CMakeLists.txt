@@ -1,9 +1,13 @@
 AUX_SOURCE_DIRECTORY(ledgerdb ledgerdb_srcs)
 LIST(APPEND srcs ${ledgerdb_srcs})
 
+AUX_SOURCE_DIRECTORY(merkle2 merkle2_srcs)
+LIST(APPEND srcs ${merkle2_srcs})
+
 ADD_LIBRARY(db_objs OBJECT ${srcs})
 ADD_LIBRARY(db SHARED $<TARGET_OBJECTS:db_objs>)
 
 LIST(APPEND LEDGERBENCH_LINKER_LIBS ${CMAKE_SOURCE_DIR}/dbs/ledgerdb/lib/libdist.so)
 LIST(APPEND LEDGERBENCH_LINKER_LIBS ${CMAKE_SOURCE_DIR}/dbs/ledgerdb/lib/libledger.so)
+LIST(APPEND LEDGERBENCH_LINKER_LIBS ${CMAKE_SOURCE_DIR}/dbs/merkle2/lib/merklesquare_go.a)
 TARGET_LINK_LIBRARIES(db ${LEDGERBENCH_LINKER_LIBS})

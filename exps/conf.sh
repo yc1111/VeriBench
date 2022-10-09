@@ -16,7 +16,7 @@ initdata="/data/yc/ustore/tpcc/tpcc"
 ###########################
 
 # database name (same as the folder name under dbadaptor/)
-database="ledgerdb"
+database="merkle2"
 # configuratino file name under dbadapter/<database>/conf/ folder, if any
 dbconfig="config.properties"
 
