@@ -1,0 +1,62 @@
+{
+    "enclave": {
+      "file": "/app/libccf_app.virtual.so",
+      "type": "Virtual"
+    },
+    "network": {
+      "node_to_node_interface": { "bind_address": "<host>:8081" },
+      "rpc_interfaces": {
+        "primary_rpc_interface": {
+          "bind_address": "<host>:8080"
+        }
+      }
+    },
+    "command": {
+      "type": "Join",
+      "service_certificate_file": "/external/service_cert.pem",
+      "join": {
+        "retry_timeout": "1s",
+        "target_rpc_address": "<primary>:8080"
+      }
+    },
+    "ledger": {
+      "directory": "/app/ledger",
+      "read_only_directories": [],
+      "chunk_size": "5MB"
+    },
+    "snapshots": {
+      "directory": "/app/snapshots",
+      "tx_count": 10000
+    },
+    "logging": {
+      "host_level": "Info",
+      "format": "Text"
+    },
+    "consensus": {
+      "type": "CFT",
+      "message_timeout": "100ms",
+      "election_timeout": "4000ms"
+    },
+    "ledger_signatures": {
+      "tx_count": 5000,
+      "delay": "1s"
+    },
+    "jwt": {
+      "key_refresh_interval": "30min"
+    },
+    "output_files": {
+      "node_certificate_file": "/app/node.pem",
+      "pid_file": "/app/node.pid",
+      "node_to_node_address_file": "/app/node.node_address",
+      "rpc_addresses_file": "/app/node.rpc_addresses"
+    },
+    "tick_interval": "1ms",
+    "slow_io_logging_threshold": "10000us",
+    "client_connection_timeout": "2000ms",
+    "worker_threads": 0,
+    "memory": {
+      "circuit_size": "4MB",
+      "max_msg_size": "16MB",
+      "max_fragment_size": "64KB"
+    }
+}

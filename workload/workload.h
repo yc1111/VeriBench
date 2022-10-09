@@ -14,6 +14,7 @@ class Workload {
  public:
   virtual std::unique_ptr<Task> NextTask() = 0;
   virtual int ExecuteTxn(Task* t, DB* db, Promise* promise) = 0;
+  virtual int StoredProcedure(Task* task, DB* db, Promise* promise) = 0;
 };
 
 }  // namespace ledgerbench

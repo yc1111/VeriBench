@@ -29,6 +29,7 @@ echo "Running the client(s)"
 count=0
 for host in ${clients[@]}
 do
+  echo $host
   ssh $host "source ~/.profile; mkdir -p $log_dir; \
       $exp_dir/start_multiple_clients.sh \
           \"$bin_dir/run \

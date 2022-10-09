@@ -72,6 +72,16 @@ int YCSB::ExecuteTxn(Task* task, DB* client, Promise* promise) {
   return client->Commit(promise);
 }
 
+int YCSB::StoredProcedure(Task* task, DB* client, Promise* promise) {
+  const YCSBTask* t = static_cast<const YCSBTask*>(task);
+  std::vector<std::string> params;
+  params.emplace_back(std::to_string(t->op));
+  params.emplace_back(t->key);
+  params.emplace_back(t->val);
+  return client->StoredProcedure(params, OpType::kYCSB, promise);
+}
+
+
 double YCSB::zeta(size_t n) {
   double sum = 0;
   for(uint32_t i = 1; i <= n; ++i) {

@@ -21,6 +21,7 @@ class SmallBank : public Workload {
 
   std::unique_ptr<Task> NextTask();
   int ExecuteTxn(Task* task, DB* db, Promise* promise);
+  int StoredProcedure(Task* task, DB* db, Promise* promise) { return 0; };
 
  private:
   int Amalgamate(const SmallBankTask* task, DB* db, Promise* promise);

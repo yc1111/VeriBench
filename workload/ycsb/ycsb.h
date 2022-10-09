@@ -23,6 +23,7 @@ class YCSB : public Workload {
 
   std::unique_ptr<Task> NextTask();
   int ExecuteTxn(Task* task, DB* db, Promise* promise);
+  int StoredProcedure(Task* task, DB* db, Promise* promise);
 
  private:
   double zeta(size_t n);

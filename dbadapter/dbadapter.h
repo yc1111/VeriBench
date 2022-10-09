@@ -11,6 +11,17 @@ struct Promise {
   virtual size_t size() = 0;
 };
 
+enum OpType {
+  kYCSB,
+  kRANGE,
+  kPROVENANCE,
+  kTPCC_NEWORDER,
+  kTPCC_PAYMENT,
+  kTPCC_ORDERSTATUS,
+  kTPCC_DELIVERY,
+  kTPCC_STOCKLEVEL
+};
+
 class DB {
  public:
   virtual void Begin() = 0;
@@ -38,6 +49,9 @@ class DB {
                     Promise* promise) = 0;
 
   virtual bool Verify(Promise* promise) = 0;
+
+  virtual int StoredProcedure(std::vector<std::string>, const OpType& type,
+      Promise* promise) = 0;
 };
 
 }  // namespace ledgerbench

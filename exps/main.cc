@@ -5,6 +5,7 @@
 
 #include "dbadapter.h"
 #include "ledgerdb/ledgerdb.h"
+#include "ccf/ccf.h"
 #include "workload.h"
 #include "ycsb/ycsb.h"
 #include "tpcc/tpcc.h"
@@ -72,7 +73,8 @@ int txnThread(ledgerbench::Workload* wl, ledgerbench::DB* db, int duration) {
     while (!task_queue.try_pop(task));
 
     gettimeofday(&t1, NULL);
-    int status = wl->ExecuteTxn(task.get(), db, promises.get());
+    //int status = wl->ExecuteTxn(task.get(), db, promises.get());
+    int status = wl->StoredProcedure(task.get(), db, promises.get());
     gettimeofday(&t2, NULL);
 
     long latency = (t2.tv_sec - t1.tv_sec)*1000000 +
@@ -194,6 +196,9 @@ int main(int argc, char **argv) {
   if (system.compare("ledgerdb") == 0) {
     db.reset(new ledgerbench::LedgerDB(dbConfigPath));
     promises.reset(new ledgerbench::LDBPromise());
+  } else if (system.compare("ccf") == 0) {
+    db.reset(new ledgerbench::CCF(dbConfigPath));
+    promises.reset(new ledgerbench::CCFPromise());
   }
 
   std::unique_ptr<ledgerbench::Workload> wl;
@@ -213,5 +218,5 @@ int main(int argc, char **argv) {
 
   actual_ops.emplace_back(std::async(std::launch::async, txnThread, wl.get(), db.get(), duration));
 
-  // actual_ops.emplace_back(std::async(std::launch::async, verifyThread, db.get(), delay));
+  actual_ops.emplace_back(std::async(std::launch::async, verifyThread, db.get(), delay));
 }

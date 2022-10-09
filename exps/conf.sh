@@ -7,7 +7,7 @@
 # workload name (same as the folder name under workload/)
 workload="ycsb"
 # configuration file name under workload/<workload>/conf/ folder, if any
-wlconfig="balanced"
+wlconfig=balanced
 # workload init data file path, if any
 initdata="/data/yc/ustore/tpcc/tpcc"
 
@@ -27,7 +27,7 @@ dbconfig="config.properties"
 # number of shards
 nshard=16
 # number of client process per client node
-nclient=10
+nclient=20
 # number of thread per client process for task generation
 nthread=10
 # task generation rate for each thread
@@ -35,7 +35,7 @@ request_rate=120
 # experiment duration
 duration=120
 # verification interval for deferred verification
-delay=1000
+delay=10
 # block creation interval
 blocktime=100
 # wait time when the cluster is booted

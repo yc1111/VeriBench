@@ -1,0 +1,21 @@
+# Build
+FROM mcr.microsoft.com/ccf/app/dev:2.0.7-sgx as builder
+COPY ./cpp /cpp
+RUN mkdir -p /build/
+WORKDIR /build/
+RUN CC="/opt/oe_lvi/clang-10" CXX="/opt/oe_lvi/clang++-10" cmake -GNinja /cpp && ninja
+
+# Run
+FROM mcr.microsoft.com/ccf/app/run:2.0.7-sgx
+
+RUN apt-get update
+RUN apt-get install -y vim curl jq
+
+COPY --from=builder /build/libccf_app.virtual.so /app/
+COPY --from=builder /opt/ccf/bin/*.js /app/
+COPY ./config/cchost_config_virtual_cpp_join* /app/
+WORKDIR /app/
+
+EXPOSE 8080/tcp
+
+CMD ["/usr/bin/cchost", "--config", "/app/cchost_config_virtual_cpp_join.json"]

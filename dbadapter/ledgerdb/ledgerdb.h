@@ -46,6 +46,10 @@ class LedgerDB : public DB {
             Promise* promise);
 
   bool Verify(Promise* promise);
+
+  int StoredProcedure(std::vector<std::string> task, const OpType& type,
+      Promise* promise) { return 0; }
+
  private:
   void Merge(const
       std::map<int, std::map<uint64_t, std::vector<std::string>>>& newmap,
