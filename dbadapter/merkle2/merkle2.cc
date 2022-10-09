@@ -3,6 +3,7 @@
 //
 
 #include "merkle2.h"
+#include <fstream>
 
 ledgerbench::MerkleSquare::MerkleSquare(const char* config) {
     std::ifstream infile(config);
@@ -16,14 +17,26 @@ ledgerbench::MerkleSquare::MerkleSquare(const char* config) {
     }
     infile.close();
 
-    server = props["server"] + ":49563";
-    server = props["verifier"] + ":49562";
-    server = props["auditor"] + ":49564";
+    std::string s = props["server"] + ":49563";
+    server = new char[s.size()];
+    std::copy(s.begin(), s.end(), server);
+
+    std::string v = props["verifier"] + ":49563";
+    verifier = new char[v.size()];
+    std::copy(v.begin(), v.end(), verifier);
+
+    std::string a = props["auditor"] + ":49563";
+    auditor = new char[a.size()];
+    std::copy(a.begin(), a.end(), auditor);
+
     merklesquareclient_new(server, auditor, verifier);
 }
 
 ledgerbench::MerkleSquare::~MerkleSquare() {
     merklesquareclient_delete(goobj_);
+    delete server;
+    delete verifier;
+    delete auditor;
 }
 
 

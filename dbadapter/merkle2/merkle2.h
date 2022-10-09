@@ -41,9 +41,9 @@ namespace ledgerbench {
 
     private:
         int rc;
-        std::string server;
-        std::string verifier;
-        std::string auditor;
+        char* server;
+        char* verifier;
+        char* auditor;
         merklesquareclient_handle_t goobj_;
     };
 }
