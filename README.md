@@ -1,7 +1,5 @@
 # VeriBench
 
-[Home page](https://www.comp.nus.edu.sg/~dbsystem/fintech-Ledgerbench/#/)
-
 ## Overview
 
 This repository implements VeriBench, a benchmark framework for database systems with verifiability. VeriBench evaluates all main components of a verifiability-enabled database, namely authenticated data structure, query processing, verification, and auditing. It provides comprehensive performance analysis with verification-aware micro- and macro-benchmarks. Meanwhile, VeriBench provides user friendly extensible APIs. Users can easily add their customized workloads and new ledger databases for benchmarking.
