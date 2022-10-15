@@ -12,14 +12,22 @@ struct Promise {
 };
 
 enum OpType {
-  kYCSB,
-  kRANGE,
+  kYCSB_RD,
+  kYCSB_WR,
   kPROVENANCE,
+  kRANGE,
   kTPCC_NEWORDER,
   kTPCC_PAYMENT,
   kTPCC_ORDERSTATUS,
   kTPCC_DELIVERY,
-  kTPCC_STOCKLEVEL
+  kTPCC_STOCKLEVEL,
+  kSB_AM,
+  kSB_GB,
+  kSB_UB,
+  kSB_US,
+  kSB_SP,
+  kSB_WC,
+  kVERIFY
 };
 
 class DB {
@@ -30,6 +38,8 @@ class DB {
 
   virtual void Abort() = 0;
 
+  virtual void Init() = 0;
+
   virtual int Get(const std::vector<std::string>& keys,
                   std::vector<std::string>& vals,
                   Promise* promise) = 0;
@@ -38,8 +48,8 @@ class DB {
                   std::string* vals,
                   Promise* promise) = 0;
 
-  virtual void Put(const std::vector<std::string>& keys,
-                   const std::vector<std::string>& vals) = 0;
+  virtual int Put(const std::vector<std::string>& keys,
+                  const std::vector<std::string>& vals) = 0;
 
   virtual void Provenance(const std::string& keys, int n) = 0;
 

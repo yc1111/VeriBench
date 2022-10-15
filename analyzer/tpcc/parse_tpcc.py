@@ -37,6 +37,8 @@ for wper in wpers:
     os = open(path + "/os", "w")
     dl = open(path + "/dl", "w")
     sl = open(path + "/sl", "w")
+    vlat = open(path + "/verify", "w")
+    vpk = open(path + "/verifyperkey", "w")
 
     print_result(ftps, path, wper, servers, clients, t, 0)
     print_result(flat, path, wper, servers, clients, t, 1)
@@ -46,6 +48,8 @@ for wper in wpers:
     print_result(os, path, wper, servers, clients, t, 7)
     print_result(dl, path, wper, servers, clients, t, 8)
     print_result(sl, path, wper, servers, clients, t, 9)
+    print_result(vlat, path, wper, servers, clients, t, 10)
+    print_result(vpk, path, wper, servers, clients, t, 11)
 
     ftps.close()
     flat.close()
@@ -55,3 +59,5 @@ for wper in wpers:
     os.close()
     dl.close()
     sl.close()
+    vlat.close()
+    vpk.close()

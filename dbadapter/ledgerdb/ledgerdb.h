@@ -27,6 +27,8 @@ class LedgerDB : public DB {
 
   void Abort();
 
+  void Init() {}
+
   int Get(const std::vector<std::string>& keys,
           std::vector<std::string>& vals,
           Promise* promise);
@@ -35,7 +37,7 @@ class LedgerDB : public DB {
           std::string* vals,
           Promise* promise);
 
-  void Put(const std::vector<std::string>& keys,
+  int Put(const std::vector<std::string>& keys,
            const std::vector<std::string>& vals);
 
   void Provenance(const std::string& keys, int n);

@@ -9,23 +9,25 @@ tLatency = []
 sLatency = []
 fLatency = []
 
-tExtra = 0.0
-sExtra = 0.0
-fExtra = 0.0
-
-xLatency = []
 noLatency = []
 osLatency = []
 pmLatency = []
 dlLatency = []
 slLatency = []
+vLatency = []
+
+nkey = 0
+nkeys = []
 
 for line in open(sys.argv[1]):
   if line.startswith('#') or line.strip() == "":
     continue
+  if line.startswith("verifynkeys"):
+    nkey = float(line[12:-1])
+    continue
 
   line = line.strip().split()
-  if not line[0].isdigit() or len(line) < 4:
+  if not line[0].isdigit() or len(line) < 6:
     continue
 
   if start == -1:
@@ -43,45 +45,31 @@ for line in open(sys.argv[1]):
   latency = int(line[3])
   status = int(line[4])
   op = int(line[5])
-  ttype = -1
-  extra = 0
-  # try:
-  #   ttype = int(line[5])
-  #   extra = int(line[6])
-  # except:
-  #   extra = 0
 
-  if status == 1 and ttype == 2:
-    xLatency.append(latency)
-
-  tLatency.append(latency) 
-  tExtra += extra
+  tLatency.append(latency)
 
   if status == 0:
     sLatency.append(latency)
-    sExtra += extra
   else:
     fLatency.append(latency)
-    fExtra += extra
 
-  if op == 0:
+  if op == 4:
     noLatency.append(latency)
-  elif op == 1:
+  elif op == 5:
     pmLatency.append(latency)
-  elif op == 2:
+  elif op == 6:
     osLatency.append(latency)
-  elif op == 3:
+  elif op == 7:
     dlLatency.append(latency)
-  elif op == 4:
+  elif op == 8:
     slLatency.append(latency)
+  elif op == 15 and int(line[0]) > 0:
+    nkeys.append(nkey)
+    vLatency.append(latency)
 
 if len(tLatency) == 0:
   print "Zero completed transactions.."
   sys.exit()
-
-tLatency.sort()
-sLatency.sort()
-fLatency.sort()
 
 outfile = open(sys.argv[3], "w")
 outfile.write(str(len(sLatency)) + "\n")                                        
@@ -99,20 +87,6 @@ outfile.write(str(len(dlLatency)) + "\n")
 outfile.write(str(sum(dlLatency)) + "\n")
 outfile.write(str(len(slLatency)) + "\n")
 outfile.write(str(sum(slLatency)) + "\n")
-
-# print "Transactions(All/Success): ", len(tLatency), len(sLatency)
-# print "Abort Rate: ", (float)(len(tLatency)-len(sLatency))/len(tLatency)
-# print "Throughput (All/Success): ", len(tLatency)/(end-start), len(sLatency)/(end-start)
-# print "Average Latency (all): ", sum(tLatency)/float(len(tLatency))
-# print "Median  Latency (all): ", tLatency[len(tLatency)/2]
-# print "99%tile Latency (all): ", tLatency[(len(tLatency) * 99)/100]
-# print "Average Latency (success): ", sum(sLatency)/float(len(sLatency))
-# print "Median  Latency (success): ", sLatency[len(sLatency)/2]
-# print "99%tile Latency (success): ", sLatency[(len(sLatency) * 99)/100]
-# print "Extra (all): ", tExtra
-# print "Extra (success): ", sExtra
-# if len(xLatency) > 0:
-#   print "X Transaction Latency: ", sum(xLatency)/float(len(xLatency))
-# if len(fLatency) > 0:
-#   print "Average Latency (failure): ", sum(fLatency)/float(len(tLatency)-len(sLatency))
-#   print "Extra (failure): ", fExtra
+outfile.write(str(len(vLatency)) + "\n")
+outfile.write(str(sum(vLatency)) + "\n")
+outfile.write(str(sum(nkeys)) + "\n")

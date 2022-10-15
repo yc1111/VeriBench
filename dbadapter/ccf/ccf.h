@@ -21,6 +21,8 @@ class CCF : public DB {
 
   void Abort() {}
 
+  void Init() {}
+
   int Get(const std::vector<std::string>& keys,
           std::vector<std::string>& vals,
           Promise* promise) { return 0; }
@@ -29,8 +31,8 @@ class CCF : public DB {
           std::string* vals,
           Promise* promise) { return 0; }
 
-  void Put(const std::vector<std::string>& keys,
-           const std::vector<std::string>& vals) {}
+  int Put(const std::vector<std::string>& keys,
+          const std::vector<std::string>& vals) { return 0; }
 
   void Provenance(const std::string& keys, int n) {}
 
@@ -49,6 +51,7 @@ class CCF : public DB {
       size_t nmemb, void* userp);
   
   size_t GetLatestCommit();
+  long HandleProvenance(int seq);
 
   CURL* curl;
   CURL* verifier;

@@ -14,4 +14,4 @@ do
 done
 
 sleep 5
-$db_config_dir/script/init.sh $primary:8080 $db_config_dir
+$db_config_dir/script/init.sh $primary:8080 $db_config_dir $workload

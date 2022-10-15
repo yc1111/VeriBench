@@ -1,5 +1,6 @@
 host=$1
 path=$2
+workload=$3
 
 # activate member
 curl https://${host}/gov/ack/update_state_digest -X POST \
@@ -39,3 +40,34 @@ curl https://${host}/app/commit -X GET \
     --cacert $path/external/service_cert.pem \
     --key $path/script/user0_privk.pem \
     --cert $path/script/user0_cert.pem  > $path/tid
+
+if [ "$workload" = "tpcc" ]; then
+  echo "init data for tpcc"
+  for i in {0..51}
+  do
+    curl https://${host}/app/inittpcc?batchid=$i -X GET \
+        --cacert $path/external/service_cert.pem \
+        --key $path/script/user0_privk.pem \
+        --cert $path/script/user0_cert.pem
+  done
+elif [ "$workload" = "smallbank" ]; then
+  echo "init data for smallbank"
+  curl https://${host}/app/initsb -X GET \
+      --cacert $path/external/service_cert.pem \
+      --key $path/script/user0_privk.pem \
+      --cert $path/script/user0_cert.pem
+elif [ "$workload" = "ycsb" ]; then
+  echo "init data for ycsb"
+  if [ "$wlconfig" = "provenance" ]; then
+    let n=10
+  else
+    let n=1
+  fi
+  for i in $(seq 1 $n)
+  do
+    curl https://${host}/app/initycsb?version=$i -X GET \
+      --cacert $path/external/service_cert.pem \
+      --key $path/script/user0_privk.pem \
+      --cert $path/script/user0_cert.pem
+  done
+fi

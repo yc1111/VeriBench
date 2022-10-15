@@ -58,7 +58,7 @@ int TPCC::nurand(int a, int x, int y, int constrand) {
 }
 
 void TPCC::genNewOrder(TPCCTask* task) {
-  task->op = 0;
+  task->op = OpType::kTPCC_NEWORDER;
   auto w_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/5));
   task->keys.emplace_back(w_id);
   auto d_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/10));
@@ -77,7 +77,7 @@ void TPCC::genNewOrder(TPCCTask* task) {
 }
 
 void TPCC::genPayment(TPCCTask* task) {
-  task->op = 1;
+  task->op = OpType::kTPCC_PAYMENT;
   auto w_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/5));
   task->keys.emplace_back(w_id);
   auto d_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/10));
@@ -89,7 +89,7 @@ void TPCC::genPayment(TPCCTask* task) {
 }
 
 void TPCC::genDelivery(TPCCTask* task) {
-  task->op = 3;
+  task->op = OpType::kTPCC_DELIVERY;
   auto w_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/5));
   task->keys.emplace_back(w_id);
   auto o_carrier_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/10));
@@ -97,7 +97,7 @@ void TPCC::genDelivery(TPCCTask* task) {
 }
 
 void TPCC::genOrderStatus(TPCCTask* task) {
-  task->op = 2;
+  task->op = OpType::kTPCC_ORDERSTATUS;
   auto w_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/5));
   task->keys.emplace_back(w_id);
   auto d_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/10));
@@ -107,7 +107,7 @@ void TPCC::genOrderStatus(TPCCTask* task) {
 }
 
 void TPCC::genStockLevel(TPCCTask* task) {
-  task->op = 4;
+  task->op = OpType::kTPCC_STOCKLEVEL;
   auto w_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/5));
   task->keys.emplace_back(w_id);
   auto d_id = std::to_string(1 + rand()/((RAND_MAX + 1u)/10));
@@ -523,6 +523,11 @@ int TPCC::execStockLevel(const TPCCTask* task, DB* db, Promise* promise) {
     ol_cnt_idx++;
   }
   return 0;
+}
+
+int TPCC::StoredProcedure(Task* task, DB* db, Promise* promise) {
+  const TPCCTask* t = static_cast<const TPCCTask*>(task);
+  return db->StoredProcedure(t->keys, task->op, promise);
 }
 
 }  // namespace ledgerbench

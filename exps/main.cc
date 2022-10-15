@@ -6,6 +6,7 @@
 #include "dbadapter.h"
 #include "ledgerdb/ledgerdb.h"
 #include "ccf/ccf.h"
+#include "merkle2/merkle2.h"
 #include "workload.h"
 #include "ycsb/ycsb.h"
 #include "tpcc/tpcc.h"
@@ -58,12 +59,13 @@ int verifyThread(ledgerbench::DB* db, size_t delay) {
                    (t1.tv_usec - t0.tv_usec);
 
     fprintf(stderr, "%ld %ld.%06ld %ld.%06ld %ld %d %d\n", promises->size(),
-        t0.tv_sec, t0.tv_usec, t1.tv_sec, t1.tv_usec, latency, vs?1:0, 9);
+        t0.tv_sec, t0.tv_usec, t1.tv_sec, t1.tv_usec, latency, vs?0:1,
+        ledgerbench::OpType::kVERIFY);
   }
   return 0;
 }
 
-int txnThread(ledgerbench::Workload* wl, ledgerbench::DB* db, int duration) {
+int txnThread(ledgerbench::Workload* wl, ledgerbench::DB* db, int duration, int mode) {
   size_t nTransactions = 0;
   timeval t0, t1, t2;
   gettimeofday(&t0, NULL);
@@ -73,8 +75,12 @@ int txnThread(ledgerbench::Workload* wl, ledgerbench::DB* db, int duration) {
     while (!task_queue.try_pop(task));
 
     gettimeofday(&t1, NULL);
-    //int status = wl->ExecuteTxn(task.get(), db, promises.get());
-    int status = wl->StoredProcedure(task.get(), db, promises.get());
+    int status = 0;
+    if (mode == 0) {
+      status = wl->ExecuteTxn(task.get(), db, promises.get());
+    } else {
+      status = wl->StoredProcedure(task.get(), db, promises.get());
+    }
     gettimeofday(&t2, NULL);
 
     long latency = (t2.tv_sec - t1.tv_sec)*1000000 +
@@ -84,6 +90,8 @@ int txnThread(ledgerbench::Workload* wl, ledgerbench::DB* db, int duration) {
 
     fprintf(stderr, "%ld %ld.%06ld %ld.%06ld %ld %d %d\n", nTransactions,
         t1.tv_sec, t1.tv_usec, t2.tv_sec, t2.tv_usec, latency, status, task->op);
+    // ad hoc for merkle2
+    // if (status > 0 && task->op == 1) { running = false; return 0; }
 
     if (((t2.tv_sec-t0.tv_sec)*1000000 + (t2.tv_usec-t0.tv_usec)) >
         duration*1000000) {
@@ -106,6 +114,8 @@ void UsageMessage(const char *command) {
   cout << "  -W workload config file path" << endl;
   cout << "  -s system name" << endl;
   cout << "  -c database config file path" << endl;
+  cout << "  -i execute workload by calling interactive API" << endl;
+  cout << "  -p execute workload by calling stored procedure" << endl;
 }
 
 int main(int argc, char **argv) {
@@ -118,13 +128,15 @@ int main(int argc, char **argv) {
   int nThread = 10;
   int duration = 10;
   size_t delay = 0;
+  int mode = 0;
+  int n = 0;
 
   // database config
   string system;
   const char *dbConfigPath = NULL;
 
   int opt;
-  while ((opt = getopt(argc, argv, "r:t:D:d:w:W:c:s:")) != -1) {
+  while ((opt = getopt(argc, argv, "r:t:D:d:w:W:c:s:n:ip")) != -1) {
     switch (opt) {
     case 'r': // request rate
     {
@@ -186,6 +198,26 @@ int main(int argc, char **argv) {
       dbConfigPath = optarg;
       break;
     }
+    case 'n': // nth client
+    {
+      char *strtolPtr;
+      n = strtol(optarg, &strtolPtr, 10);
+      if ((*optarg == '\0') || (*strtolPtr != '\0') || (n < 0)) {
+        UsageMessage(argv[0]);
+        return 0;
+      }
+      break; 
+    }
+    case 'i': // execution mode
+    {
+      mode = 0;
+      break;
+    }
+    case 'p': // execution mode
+    {
+      mode = 1;
+      break;
+    }
     default:
       UsageMessage(argv[0]);
       return 0;
@@ -199,6 +231,9 @@ int main(int argc, char **argv) {
   } else if (system.compare("ccf") == 0) {
     db.reset(new ledgerbench::CCF(dbConfigPath));
     promises.reset(new ledgerbench::CCFPromise());
+  } else if (system.compare("merkle2") == 0) {
+    db.reset(new ledgerbench::Merkle2(dbConfigPath, n));
+    promises.reset(new ledgerbench::Merkle2Promise());
   }
 
   std::unique_ptr<ledgerbench::Workload> wl;
@@ -210,13 +245,15 @@ int main(int argc, char **argv) {
     wl.reset(new ledgerbench::SmallBank());
   }
 
+  db->Init();
+
   std::vector<std::future<int>> actual_ops;
   int interval = 1000 / request_rate;
   for (int i = 0; i < nThread; ++i) {
     actual_ops.emplace_back(std::async(std::launch::async, taskGenerator, wl.get(), interval));
   }
 
-  actual_ops.emplace_back(std::async(std::launch::async, txnThread, wl.get(), db.get(), duration));
+  actual_ops.emplace_back(std::async(std::launch::async, txnThread, wl.get(), db.get(), duration, mode));
 
   actual_ops.emplace_back(std::async(std::launch::async, verifyThread, db.get(), delay));
 }

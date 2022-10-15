@@ -37,20 +37,29 @@ std::unique_ptr<Task> YCSB::NextTask() {
   task->val = NextValue(20);
 
   auto roll = rand() % 100;
-  if (roll < writeperc) {
-    task->op = 1;
+  if (roll < readperc) {
+    task->op = OpType::kYCSB_RD;
+    task->n = 0;
+    task->from = "";
+    task->to = "";
   } else if (roll < writeperc + readperc) {
-    task->op = 0;
+    task->op = OpType::kYCSB_WR;
+    task->n = 0;
+    task->from = "";
+    task->to = "";
   } else if (roll < writeperc + readperc + provperc) {
-    task->op = 2;
+    task->op = OpType::kPROVENANCE;
     task->n = rand() % 10;
+    task->from = "";
+    task->to = "";
   } else {
-    task->op = 3;
+    task->op = OpType::kRANGE;
     auto from = rand() % 89999 + 10000;
     auto range = rand() % 10 + 10;
     auto to = from + range;
     task->from = std::to_string(from);
     task->to = std::to_string(to);
+    task->n = 0;
   }
   return task;
 }
@@ -58,16 +67,33 @@ std::unique_ptr<Task> YCSB::NextTask() {
 int YCSB::ExecuteTxn(Task* task, DB* client, Promise* promise) {
   const YCSBTask* t = static_cast<const YCSBTask*>(task);
   client->Begin();
-  if (t->op == 1) {
-    client->Put({t->key}, {t->val});
-  } else if (t->op == 0) {
-    std::string value;
-    client->Get(t->key, &value, promise);
-  } else if (t->op == 2) {
-    client->Provenance(t->key, t->n);
-  } else {
-    std::map<std::string, std::string> result;
-    client->Range(t->from, t->to, result, promise);
+  switch (t->op) {
+    case OpType::kYCSB_WR:
+    {
+      auto status = client->Put({t->key}, {t->val});
+      if (status > 0) return status;
+      break;
+    }
+    case OpType::kYCSB_RD:
+    {
+      std::string value;
+      auto status = client->Get(t->key, &value, promise);
+      if (status > 0) return status;
+      break;
+    }
+    case OpType::kPROVENANCE:
+    {
+      client->Provenance(t->key, t->n);
+      break;
+    }
+    case OpType::kRANGE:
+    {
+      std::map<std::string, std::string> result;
+      client->Range(t->from, t->to, result, promise);
+      break;
+    }
+    default:
+      break;
   }
   return client->Commit(promise);
 }
@@ -78,7 +104,10 @@ int YCSB::StoredProcedure(Task* task, DB* client, Promise* promise) {
   params.emplace_back(std::to_string(t->op));
   params.emplace_back(t->key);
   params.emplace_back(t->val);
-  return client->StoredProcedure(params, OpType::kYCSB, promise);
+  params.emplace_back(std::to_string(t->n));
+  params.emplace_back(t->from);
+  params.emplace_back(t->to);
+  return client->StoredProcedure(params, t->op, promise);
 }
 
 

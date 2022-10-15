@@ -23,6 +23,7 @@ func merklesquareclient_set(h C.merklesquareclient_handle_t, key *C.char, value 
 	p := ObjectId(h).Get().(*MerkleSquareClient)
 	err := p.Set(C.GoString(key), C.GoString(value))
 	if err != nil {
+		panic(err.Error())
 		return C.int(1)
 	}
 	return C.int(0)
@@ -35,9 +36,9 @@ func merklesquareclient_get(h C.merklesquareclient_handle_t, key *C.char, buf *C
 	value, err := p.Get(C.GoString(key))
 	if err != nil {
 		if err.Error() == "rpc error: code = Unknown desc = no user key found" {
-			return C.int(1)
+			return C.int(0)
 		}
-		return C.int(0)
+		return C.int(1)
 	}
 	n := len(value)
 	bufSlice := ((*[1 << 31]byte)(unsafe.Pointer(buf)))[0:n:n]

@@ -12,6 +12,8 @@ numW = 0.0
 sumW = 0.0
 numH = 0.0
 sumH = 0.0
+numRg = 0.0
+sumRg = 0.0
 numV = 0.0
 sumV = 0.0
 sumN = 0.0
@@ -33,9 +35,11 @@ for f in glob(path + "/client*log"):
     sumW = sumW + float(lines[8])
     numH = numH + float(lines[9])
     sumH = sumH + float(lines[10])
-    numV = numV + float(lines[11])
-    sumV = sumV + float(lines[12])
-    sumN = sumN + float(lines[13])
+    numRg = numRg + float(lines[11])
+    sumRg = sumRg + float(lines[12])
+    numV = numV + float(lines[13])
+    sumV = sumV + float(lines[14])
+    sumN = sumN + float(lines[15])
 
 outfile = open(outpath, "w")
 outfile.write(str(numSuccess/duration) + "\n")
@@ -56,6 +60,11 @@ else:
 
 if numH > 0:
   outfile.write(str(sumH/numH) + "\n")
+else:
+  outfile.write("0\n")
+
+if numRg > 0:
+  outfile.write(str(sumRg/numRg) + "\n")
 else:
   outfile.write("0\n")
 

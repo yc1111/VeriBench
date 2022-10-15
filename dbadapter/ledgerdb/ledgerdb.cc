@@ -62,11 +62,12 @@ int LedgerDB::Get(const std::string& key, std::string* vals,
   return client->Get(key);
 }
 
-void LedgerDB::Put(const std::vector<std::string>& keys,
-                   const std::vector<std::string>& vals) {
+int LedgerDB::Put(const std::vector<std::string>& keys,
+                  const std::vector<std::string>& vals) {
   for (size_t i = 0; i < keys.size(); ++i) {
     client->Put(keys[i], vals[i]);
   }
+  return 0;
 }
 
 void LedgerDB::Provenance(const std::string& key, int n) {

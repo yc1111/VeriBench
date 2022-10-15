@@ -4,10 +4,10 @@
       "type": "Virtual"
     },
     "network": {
-      "node_to_node_interface": { "bind_address": "10.10.10.7:8081" },
+      "node_to_node_interface": { "bind_address": "10.10.10.244:8081" },
       "rpc_interfaces": {
         "primary_rpc_interface": {
-          "bind_address": "10.10.10.7:8080"
+          "bind_address": "10.10.10.244:8080"
         }
       }
     },

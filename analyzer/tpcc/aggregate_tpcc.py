@@ -16,6 +16,9 @@ numDL = 0.0
 sumDL = 0.0
 numSL = 0.0
 sumSL = 0.0
+numV = 0.0
+sumV = 0.0
+sumN = 0.0
 
 path = sys.argv[1]
 outpath = sys.argv[2]
@@ -37,6 +40,9 @@ for f in glob(path + "/client*log"):
     sumDL = sumDL + float(lines[12])
     numSL = numSL + float(lines[13])
     sumSL = sumSL + float(lines[14])
+    numV = numV + float(lines[15])
+    sumV = sumV + float(lines[16])
+    sumN = sumN + float(lines[17])
 
 outfile = open(outpath, "w")
 outfile.write(str(numSuccess/duration) + "\n")
@@ -49,3 +55,13 @@ outfile.write(str(sumPM/numPM) + "\n")
 outfile.write(str(sumOS/numOS) + "\n")
 outfile.write(str(sumDL/numDL) + "\n")
 outfile.write(str(sumSL/numSL) + "\n")
+
+if numV > 0:
+  outfile.write(str(sumV/numV) + "\n")
+else:
+  outfile.write("0\n")
+
+if sumN > 0:
+  outfile.write(str(sumV/sumN) + "\n")
+else:
+  outfile.write("0\n")

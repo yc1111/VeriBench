@@ -35,6 +35,7 @@ for wper in wpers:
     rlat = open(path + "/read", "w")
     wlat = open(path + "/write", "w")
     hlat = open(path + "/history", "w")
+    rglat = open(path + "/range", "w")
     vlat = open(path + "/verify", "w")
     vpk = open(path + "/verifyperkey", "w")
 
@@ -44,8 +45,9 @@ for wper in wpers:
     print_result(rlat, path, wper, servers, clients, t, 5)
     print_result(wlat, path, wper, servers, clients, t, 6)
     print_result(hlat, path, wper, servers, clients, t, 7)
-    print_result(vlat, path, wper, servers, clients, t, 8)
-    print_result(vpk, path, wper, servers, clients, t, 9)
+    print_result(rglat, path, wper, servers, clients, t, 8)
+    print_result(vlat, path, wper, servers, clients, t, 9)
+    print_result(vpk, path, wper, servers, clients, t, 10)
 
     ftps.close()
     flat.close()
@@ -53,5 +55,6 @@ for wper in wpers:
     rlat.close()
     wlat.close()
     hlat.close()
+    rglat.close()
     vlat.close()
     vpk.close()

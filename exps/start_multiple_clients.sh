@@ -9,6 +9,6 @@ let end=$begin+$copies
 
 for ((i=$begin; i<$end; i++))
 do
-  command="$cmd > $log_dir/client.$i.log 2>&1 &"
+  command="$cmd -n $i > $log_dir/client.$i.log 2>&1 &"
   eval $command
 done

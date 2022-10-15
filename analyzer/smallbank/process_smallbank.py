@@ -36,7 +36,7 @@ for line in open(sys.argv[1]):
     end = start + warmup
 
   fts = float(line[2])
-  
+
   if fts < start:
     continue
 
@@ -54,19 +54,19 @@ for line in open(sys.argv[1]):
   else:
     fLatency.append(latency)
 
-  if op == 1:
+  if op == 9:
     amLatency.append(latency)
-  elif op == 2:
+  elif op == 10:
     gbLatency.append(latency)
-  elif op == 3:
+  elif op == 11:
     ubLatency.append(latency)
-  elif op == 4:
+  elif op == 12:
     usLatency.append(latency)
-  elif op == 5:
+  elif op == 13:
     spLatency.append(latency)
-  elif op == 6:
+  elif op == 14:
     wcLatency.append(latency)
-  elif op == 9 and int(line[0]) > 0:
+  elif op == 15 and int(line[0]) > 0:
     nkeys.append(nkey)
     vLatency.append(latency)
 
@@ -75,9 +75,9 @@ if len(tLatency) == 0:
   sys.exit()
 
 outfile = open(sys.argv[3], "w")
-outfile.write(str(len(sLatency)) + "\n")                                        
-outfile.write(str(sum(sLatency)) + "\n")                                        
-outfile.write(str(len(tLatency)) + "\n")                                        
+outfile.write(str(len(sLatency)) + "\n")
+outfile.write(str(sum(sLatency)) + "\n")
+outfile.write(str(len(tLatency)) + "\n")
 outfile.write(str(sum(tLatency)) + "\n")
 outfile.write(str(end - start) + "\n")
 outfile.write(str(len(amLatency)) + "\n")

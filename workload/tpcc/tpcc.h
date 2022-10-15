@@ -19,7 +19,7 @@ class TPCC : public Workload {
 
   std::unique_ptr<Task> NextTask();
   int ExecuteTxn(Task* task, DB* db, Promise* promise);
-  int StoredProcedure(Task* task, DB* db, Promise* promise) { return 0; }
+  int StoredProcedure(Task* task, DB* db, Promise* promise);
 
  private:
   int nurand(int a, int x, int y, int constrand);

@@ -12,6 +12,7 @@ fLatency = []
 rLatency = []
 wLatency = []
 hLatency = []
+rgLatency = []
 vLatency = []
 
 nkey = 0
@@ -29,8 +30,8 @@ for line in open(sys.argv[1]):
     continue
 
   if start == -1:
-    start = float(line[2]) + warmup
-    end = start + warmup
+    start = float(line[2]) # + warmup
+    end = start + duration #warmup
 
   fts = float(line[2])
   
@@ -50,16 +51,19 @@ for line in open(sys.argv[1]):
     wLatency.append(latency)
   elif op == 2:
     hLatency.append(latency)
-  elif int(line[0]) > 0:
+  elif op == 3:
+    rgLatency.append(latency)
+  elif op == 15 and int(line[0]) > 0:
     nkeys.append(nkey)
     vLatency.append(latency)
 
-  tLatency.append(latency) 
 
-  if status == 0:
-    sLatency.append(latency)
-  else:
-    fLatency.append(latency)
+  if op != 15:
+    tLatency.append(latency) 
+    if status == 0:
+      sLatency.append(latency)
+    else:
+      fLatency.append(latency)
 
 if len(tLatency) == 0:
   print "Zero completed transactions.."
@@ -77,6 +81,8 @@ outfile.write(str(len(wLatency)) + "\n")
 outfile.write(str(sum(wLatency)) + "\n")
 outfile.write(str(len(hLatency)) + "\n")
 outfile.write(str(sum(hLatency)) + "\n")
+outfile.write(str(len(rgLatency)) + "\n")
+outfile.write(str(sum(rgLatency)) + "\n")
 outfile.write(str(len(vLatency)) + "\n")
 outfile.write(str(sum(vLatency)) + "\n")
 outfile.write(str(sum(nkeys)) + "\n")

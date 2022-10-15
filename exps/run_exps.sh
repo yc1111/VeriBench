@@ -34,7 +34,7 @@ do
       $exp_dir/start_multiple_clients.sh \
           \"$bin_dir/run \
               -r $request_rate -t $nthread -D $duration -d $delay -w $workload \
-              -W $wl_config_file -s $database -c $db_config_file \" \
+              -W $wl_config_file -s $database -c $db_config_file $mode \" \
           $count $nclient $log_dir"
 
   let count=$count+$nclient

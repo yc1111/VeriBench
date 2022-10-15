@@ -16,22 +16,24 @@ initdata="/data/yc/ustore/tpcc/tpcc"
 ###########################
 
 # database name (same as the folder name under dbadaptor/)
-database="merkle2"
+database="ccf"
 # configuratino file name under dbadapter/<database>/conf/ folder, if any
 dbconfig="config.properties"
+# execution mode of database: interactive (-i) or stored procedure (-p)
+mode=-p
 
 ###########################
 # experiment configurations
 ###########################
 
 # number of shards
-nshard=16
+nshard=3
 # number of client process per client node
 nclient=20
 # number of thread per client process for task generation
 nthread=10
 # task generation rate for each thread
-request_rate=120
+request_rate=100
 # experiment duration
 duration=120
 # verification interval for deferred verification
@@ -66,6 +68,6 @@ ana_dir="$root_dir/analyzer/$workload"
 # log path
 log_dir="/data/yc/logs"
 # result path
-res_dir="/data/yc/results"
+res_dir="/data/yc/results/$database"
 # Machines running.
 clients=`cat $db_config_dir/clients`

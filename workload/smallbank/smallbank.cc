@@ -13,7 +13,26 @@ std::unique_ptr<Task> SmallBank::NextTask() {
   std::uniform_int_distribution<> bal_gen(1, 10);
 
   std::unique_ptr<SmallBankTask> task(new SmallBankTask());
-  task->op = op_gen(gen);
+  switch (op_gen(gen)) {
+    case 1:
+      task->op = OpType::kSB_AM;
+      break;
+    case 2:
+      task->op = OpType::kSB_GB;
+      break;
+    case 3:
+      task->op = OpType::kSB_UB;
+      break;
+    case 4:
+      task->op = OpType::kSB_US;
+      break;
+    case 5:
+      task->op = OpType::kSB_SP;
+      break;
+    case 6:
+      task->op = OpType::kSB_WC;
+      break;
+  }
   task->acc1 = acc_gen(gen);
   task->acc2 = acc_gen(gen);
   task->balance = bal_gen(gen);
@@ -22,18 +41,21 @@ std::unique_ptr<Task> SmallBank::NextTask() {
 
 int SmallBank::ExecuteTxn(Task* task, DB* db, Promise* promise) {
   const SmallBankTask* t = static_cast<const SmallBankTask*>(task);
-  if (t->op == 0) {
-    return Amalgamate(t, db, promise);
-  } else if (t->op == 1) {
-    return GetBalance(t, db, promise);
-  } else if (t->op == 2) {
-    return UpdateBalance(t, db, promise);
-  } else if (t->op == 3) {
-    return UpdateSaving(t, db, promise);
-  } else if (t->op == 4) {
-    return SendPayment(t, db, promise);
-  } else {
-    return WriteCheck(t, db, promise);
+  switch (t->op) {
+    case OpType::kSB_AM:
+      return Amalgamate(t, db, promise);
+    case OpType::kSB_GB:
+      return GetBalance(t, db, promise);
+    case OpType::kSB_UB:
+      return UpdateBalance(t, db, promise);
+    case OpType::kSB_US:
+      return UpdateSaving(t, db, promise);
+    case OpType::kSB_SP:
+      return SendPayment(t, db, promise);
+    case OpType::kSB_WC:
+      return WriteCheck(t, db, promise);
+    default:
+      return 1;
   }
 }
 
@@ -147,6 +169,15 @@ int SmallBank::WriteCheck(const SmallBankTask* task, DB* db, Promise* promise) {
   }
 
   return 0;
+}
+
+int SmallBank::StoredProcedure(Task* task, DB* db, Promise* promise) {
+  const SmallBankTask* t = static_cast<const SmallBankTask*>(task);
+  std::vector<std::string> params;
+  params.emplace_back(std::to_string(t->acc1));
+  params.emplace_back(std::to_string(t->acc2));
+  params.emplace_back(std::to_string(t->balance));
+  return db->StoredProcedure(params, task->op, promise);
 }
 
 }  // namespace ledgerbench

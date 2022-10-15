@@ -7,7 +7,7 @@
 namespace ledgerbench {
 
 struct Task {
-  int op;
+  OpType op;
 };
 
 class Workload {

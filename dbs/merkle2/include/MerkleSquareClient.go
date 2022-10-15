@@ -40,7 +40,7 @@ func (mc *MerkleSquareClient) Set(key string, value string) error {
 
 func (mc *MerkleSquareClient) Get(key string) (string, error) {
 	queryKey := []byte(key)
-	val, _, err := mc.c.LookUpPK(mc.ctx, queryKey)
+	val, _, err := mc.c.LookUpPKVerify(mc.ctx, queryKey)
 	if err != nil {
 		return "", err
 	}

@@ -13,39 +13,52 @@ extern "C" {
 }
 
 namespace ledgerbench {
-    class MerkleSquare : public DB {
-    public:
-        MerkleSquare(const char* config);
 
-        ~MerkleSquare();
+  struct Merkle2Promise : public Promise {
+    size_t size() { return 0; };
+  };
 
-        int Get(const std::vector<std::string> &keys,
-                std::vector<std::string> &vals,
-                Promise *promise);
+  class Merkle2 : public DB {
+   public:
+    Merkle2(const char* config, int n);
 
-        int Get(const std::string &key,
-                std::string *vals,
-                Promise *promise);
+    ~Merkle2();
 
-        void Put(const std::vector<std::string> &keys,
-                 const std::vector<std::string> &vals);
+    void Begin() {};
 
-        void Provenance(const std::string &keys, int n);
+    int Commit(Promise* promise) { return 0; };
 
-        int Range(const std::string &from,
-                  const std::string &to,
-                  std::map<std::string, std::string> &values,
-                  Promise *promise);
+    void Abort() {};
 
-        bool Verify(Promise *promise);
+    void Init();
 
-    private:
-        int rc;
-        char* server;
-        char* verifier;
-        char* auditor;
-        merklesquareclient_handle_t goobj_;
-    };
+    int Get(const std::vector<std::string> &keys,
+            std::vector<std::string> &vals,
+            Promise *promise);
+
+    int Get(const std::string &key,
+            std::string *vals,
+            Promise *promise);
+
+    int Put(const std::vector<std::string> &keys,
+            const std::vector<std::string> &vals);
+
+    void Provenance(const std::string &keys, int n);
+
+    int Range(const std::string &from,
+              const std::string &to,
+              std::map<std::string, std::string> &values,
+              Promise *promise);
+
+    bool Verify(Promise *promise);
+
+    int StoredProcedure(std::vector<std::string>, const OpType& type,
+        Promise* promise) { return 0; };
+
+   private:
+    std::string clientid;
+    merklesquareclient_handle_t goobj_;
+  };
 }
 
 
