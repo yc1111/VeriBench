@@ -26,8 +26,6 @@ This repository implements VeriBench, a benchmark framework for database systems
 ## Quick Start
 ### Build
 ```
-$ git clone https://github.com/yc1111/VeriBench
-$ cd VeriBench
 $ mkdir build && cd build
 $ cmake .. && make
 ```
