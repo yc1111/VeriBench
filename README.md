@@ -1,10 +1,10 @@
-# LedgerBench
+# VeriBench
 
 [Home page](https://www.comp.nus.edu.sg/~dbsystem/fintech-Ledgerbench/#/)
 
 ## Overview
 
-This repository implements LedgerBench, a benchmark framework for ledger databases outlined in IEEE Data Engineering Bulletin [paper](http://sites.computer.org/debull/A22june/A22JUNE-CD.pdf#page=61) (June 2022). LedgerBench evaluates all main components of a ledger database, namely ledger storage, query processing, verification, and auditing. It provides comprehensive performance analysis with verification-aware micro- and macro-benchmarks. Meanwhile, LedgerBench provides user friendly extensible APIs. Users can easily add their customized workloads and new ledger databases for benchmarking.
+This repository implements VeriBench, a benchmark framework for database systems with verifiability. VeriBench evaluates all main components of a verifiability-enabled database, namely authenticated data structure, query processing, verification, and auditing. It provides comprehensive performance analysis with verification-aware micro- and macro-benchmarks. Meanwhile, VeriBench provides user friendly extensible APIs. Users can easily add their customized workloads and new ledger databases for benchmarking.
 
 ## Code structure
 
@@ -36,8 +36,8 @@ This repository implements LedgerBench, a benchmark framework for ledger databas
 ## Quick Start
 ### Build
 ```
-$ git clone https://github.com/nusdbsystem/LedgerBench
-$ cd LedgerBench
+$ git clone https://github.com/yc1111/VeriBench
+$ cd VeriBench
 $ mkdir build && cd build
 $ cmake .. && make
 ```
