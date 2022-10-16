@@ -2,8 +2,8 @@
 // Created by zch on 2022/10/7.
 //
 
-#ifndef LEDGERBENCH_MERKLE2_H
-#define LEDGERBENCH_MERKLE2_H
+#ifndef DBADAPTER_MERKLE2_H
+#define DBADAPTER_MERKLE2_H
 
 
 #include "dbadapter.h"
@@ -62,4 +62,4 @@ namespace ledgerbench {
 }
 
 
-#endif //LEDGERBENCH_MERKLE2_H
+#endif  // DBADAPTER_MERKLE2_H
