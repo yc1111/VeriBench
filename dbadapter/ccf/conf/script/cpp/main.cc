@@ -15,9 +15,9 @@ int main(void)
   CURL *curl;
   CURLcode res;
 
-  std::string service_cert = "/users/yc/LedgerBench/dbadapter/ccf/conf/external/service_cert.pem";
-  std::string user_cert = "/users/yc/LedgerBench/dbadapter/ccf/conf/script/user0_cert.pem";
-  std::string user_key = "/users/yc/LedgerBench/dbadapter/ccf/conf/script/user0_privk.pem";
+  std::string service_cert = "/xxx/xxx/LedgerBench/dbadapter/ccf/conf/external/service_cert.pem";
+  std::string user_cert = "/xxx/xxx/LedgerBench/dbadapter/ccf/conf/script/user0_cert.pem";
+  std::string user_key = "/xxx/xxx/LedgerBench/dbadapter/ccf/conf/script/user0_privk.pem";
   //std::string service_cert = "../../external/service_cert.pem";
   //std::string user_cert = "../user0_cert.pem";
   //std::string user_key = "..//user0_privk.pem";

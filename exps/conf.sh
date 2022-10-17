@@ -9,7 +9,7 @@ workload="ycsb"
 # configuration file name under workload/<workload>/conf/ folder, if any
 wlconfig=balanced
 # workload init data file path, if any
-initdata="/data/yc/ustore/tpcc/tpcc"
+initdata="/xxx/xxx/ustore/tpcc/tpcc"
 
 ###########################
 # database configurations
@@ -66,8 +66,8 @@ exp_dir="$root_dir/exps"
 # analyzer path
 ana_dir="$root_dir/analyzer/$workload"
 # log path
-log_dir="/data/yc/logs"
+log_dir="/xxx/xxx/logs"
 # result path
-res_dir="/data/yc/results/$database"
+res_dir="/xxx/xxx/results/$database"
 # Machines running.
 clients=`cat $db_config_dir/clients`
