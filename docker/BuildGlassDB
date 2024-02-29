@@ -1,43 +1,4 @@
-FROM ubuntu:22.04
-
-# install dependencies
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-    gcc-9 g++-9 \
-    make cmake \
-    git \
-    libboost-all-dev \
-    libgflags2.2 libgflags-dev \
-    libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev \
-    libcrypto++-dev \
-    protobuf-compiler libprotoc-dev \
-    libgtest-dev \
-    libssl-dev \
-    libtbb-dev
-
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
-
-# install rocksdb
-RUN mkdir -p /usr/src && \
-    cd /usr/src && \
-    git clone --depth 1 --branch v5.8.8 https://github.com/facebook/rocksdb.git && \
-    cd /usr/src/rocksdb && \
-    sed -i 's/install -C/install -c/g' Makefile && \
-    make -j4 shared_lib && \
-    make install-shared
-
-# install ledgerdatabase
-RUN cd /usr/src && \
-    git clone https://github.com/nusdbsystem/LedgerDatabase.git && \
-    cd LedgerDatabase && mkdir build && cd build && \
-    cmake -DLEDGERDB=ON -DSQLLEDGER=OFF -DQLDB=OFF -DBUILD_STATIC_LIBS=ON .. && \
-    make -j10 && make install
-
-ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
-ENV LIBRARY_PATH=/usr/local/lib:usr/lib
-ENV CMAKE_LIBRARY_PATH=/usr/local/lib:/usr/lib
-ENV CMAKE_INCLUDE_PATH=/usr/local/include:/usr/include
-ENV CPATH=/usr/include/c++/9
+FROM yc1111/glassdb:0.0.1
 
 # copy veribench
 ADD . /home/VeriBench
@@ -46,5 +7,4 @@ WORKDIR /home/VeriBench
 
 RUN cd /home/VeriBench && mkdir build && \
     cd build && \
-    cmake -DSYSTEM=LEDGERDB .. && \
-    make
+    cmake -DSYSTEM=GLASSDB .. && make
