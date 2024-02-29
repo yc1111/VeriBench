@@ -6,7 +6,7 @@
 
 #include "workload.h"
 
-namespace ledgerbench {
+namespace veribench {
 
 struct SmallBankTask : public Task {
   int acc1;
@@ -35,6 +35,6 @@ class SmallBank : public Workload {
   const std::string checking = "checkingStore_";
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // WORKLOAD_SMALLBANK_H

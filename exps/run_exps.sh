@@ -1,12 +1,14 @@
 #!/bin/bash
 . conf.sh
 
+echo "------- Clean Server -------"
 $db_config_dir/clean.sh
 
 mkdir -p $log_dir
 mkdir -p $exp_dir/results
 
 # Print out configuration being used.
+echo "-------- Parameters --------"
 echo "Configuration:"
 echo "workload: $workload"
 echo "workload config path: $wlconfig"
@@ -20,12 +22,13 @@ echo "block time: $blocktime"
 echo "init versions: $version"
 
 # Start all servers
+echo "------- start Server -------"
 $db_config_dir/start_server.sh
 
 sleep $wait_boot
 
 # Run the clients
-echo "Running the client(s)"
+echo "-- Running the client(s) --"
 count=0
 for host in ${clients[@]}
 do
@@ -52,3 +55,6 @@ $db_config_dir/stop_server.sh
 
 # Process logs
 $ana_dir/run_analyzer.sh
+
+echo "------- Clean Server -------"
+#$db_config_dir/clean.sh

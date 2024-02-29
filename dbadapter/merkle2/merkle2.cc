@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace ledgerbench {
+namespace veribench {
 
 Merkle2::Merkle2(const char* config, int n) {
   std::ifstream infile(config);
@@ -14,6 +14,7 @@ Merkle2::Merkle2(const char* config, int n) {
   std::map<std::string, std::string> props;
   while (std::getline(infile, line)) {
     size_t idx = line.find("=");
+    std::cout << idx << "/" << line.size() << std::endl;
     std::string key = line.substr(0, idx);
     std::string val = line.substr(idx + 1);
     props.emplace(key, val);
@@ -43,7 +44,7 @@ void Merkle2::Init() {
 
 int Merkle2::Get(const std::vector<std::string> &keys,
                  std::vector<std::string> &vals,
-                 ledgerbench::Promise *promise) {
+                 Promise *promise) {
   int r = 0;
   size_t n = keys.size();
   for (size_t i = 0; i < n; i++) {
@@ -58,7 +59,7 @@ int Merkle2::Get(const std::vector<std::string> &keys,
 
 int Merkle2::Get(const std::string &key,
                  std::string *vals,
-                 ledgerbench::Promise *promise) {
+                 Promise *promise) {
   char buf[512] = {0};
   std::string k = clientid + key;
   auto rc = merklesquareclient_get(goobj_, (char*)k.c_str(), buf);
@@ -84,14 +85,14 @@ void Merkle2::Provenance(const std::string &keys, int n) {
 
 int Merkle2::Range(const std::string &from, const std::string &to,
                    std::map<std::string, std::string> &values,
-                   ledgerbench::Promise *promise) {
+                   Promise *promise) {
   // not support
   return 0;
 }
 
-bool Merkle2::Verify(ledgerbench::Promise *promise) {
+bool Merkle2::Verify(Promise *promise) {
     // no need
     return true;
 }
 
-}  // namespace ledgerbench
+}  // namespace veribench

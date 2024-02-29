@@ -3,7 +3,7 @@
 #include <random>
 #include <map>
 
-namespace ledgerbench {
+namespace veribench {
 
 std::unique_ptr<Task> SmallBank::NextTask() {
   std::random_device rd;
@@ -180,4 +180,4 @@ int SmallBank::StoredProcedure(Task* task, DB* db, Promise* promise) {
   return db->StoredProcedure(params, task->op, promise);
 }
 
-}  // namespace ledgerbench
+}  // namespace veribench

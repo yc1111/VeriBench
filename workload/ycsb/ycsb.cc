@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <iostream>
 
-namespace ledgerbench {
+namespace veribench {
 
 YCSB::YCSB(const char* config) {
   std::ifstream infile(config);
@@ -23,6 +23,7 @@ YCSB::YCSB(const char* config) {
   readperc = std::stoi(props["readpercentage"]);
   writeperc = std::stoi(props["writepercentage"]);
   provperc = std::stoi(props["provenancepercentage"]);
+  rangesize = std::stoi(props["rangesize"]);
   theta = std::stod(props["theta"]);
   timeval t0;
   gettimeofday(&t0, NULL);
@@ -55,7 +56,7 @@ std::unique_ptr<Task> YCSB::NextTask() {
   } else {
     task->op = OpType::kRANGE;
     auto from = rand() % 89999 + 10000;
-    auto range = rand() % 10 + 10;
+    auto range = rand() % 10 + rangesize;
     auto to = from + range;
     task->from = std::to_string(from);
     task->to = std::to_string(to);
@@ -138,4 +139,4 @@ std::string YCSB::NextValue(int n) {
   return res;
 }
 
-}  // namespace ledgerbench
+}  // namespace veribench

@@ -6,7 +6,7 @@
 
 #include "workload.h"
 
-namespace ledgerbench {
+namespace veribench {
 
 struct YCSBTask : public Task {
   std::string key;
@@ -37,8 +37,9 @@ class YCSB : public Workload {
   int readperc;
   int writeperc;
   int provperc;
+  int rangesize;
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // WORKLOAD_YCSB_H

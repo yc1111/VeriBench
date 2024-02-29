@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace ledgerbench {
+namespace veribench {
 
 CCF::CCF(const char* config) {
   std::ifstream infile(config);
@@ -238,4 +238,4 @@ long CCF::HandleProvenance(int seq) {
   return http_code;
 }
 
-}  // namespace ledgerbench
+}  // namespace veribench

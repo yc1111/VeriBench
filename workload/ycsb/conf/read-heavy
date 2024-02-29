@@ -3,4 +3,5 @@ readpercentage=80
 writepercentage=20
 provenancepercentage=0
 rangepercentage=0
+rangesize=0
 theta=0

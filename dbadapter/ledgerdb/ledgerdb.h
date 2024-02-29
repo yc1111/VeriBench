@@ -9,7 +9,7 @@
 #include "dbadapter.h"
 #include "distributed/store/strongstore/client.h"
 
-namespace ledgerbench {
+namespace veribench {
 
 struct LDBPromise : public Promise {
   std::map<int, std::map<uint64_t, std::set<std::string>>> verify_map;
@@ -61,6 +61,6 @@ class LedgerDB : public DB {
   std::mutex lck;
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // DBADAPTER_LEDGERBD_H

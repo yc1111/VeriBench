@@ -12,7 +12,7 @@ extern "C" {
 #include "merklesquare_go.h"
 }
 
-namespace ledgerbench {
+namespace veribench {
 
   struct Merkle2Promise : public Promise {
     size_t size() { return 0; };

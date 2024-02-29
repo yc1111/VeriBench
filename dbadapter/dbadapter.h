@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-namespace ledgerbench {
+namespace veribench {
 
 struct Promise {
   virtual size_t size() = 0;
@@ -64,6 +64,6 @@ class DB {
       Promise* promise) = 0;
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // DBADAPTER_H

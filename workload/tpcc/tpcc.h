@@ -6,7 +6,7 @@
 
 #include "workload.h"
 
-namespace ledgerbench {
+namespace veribench {
 
 struct TPCCTask : public Task {
   std::vector<std::string> keys;
@@ -40,6 +40,6 @@ class TPCC : public Workload {
   int randconstiid;
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // WORKLOAD_TPCC_H

@@ -4,7 +4,7 @@
 #include <memory>
 #include "dbadapter.h"
 
-namespace ledgerbench {
+namespace veribench {
 
 struct Task {
   OpType op;
@@ -17,6 +17,6 @@ class Workload {
   virtual int StoredProcedure(Task* task, DB* db, Promise* promise) = 0;
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // WORKLOAD_H

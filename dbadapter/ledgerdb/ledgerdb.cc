@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-namespace ledgerbench {
+namespace veribench {
 
 LedgerDB::LedgerDB(const char* config) {
   std::ifstream infile(config);

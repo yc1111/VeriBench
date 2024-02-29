@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include "dbadapter.h"
 
-namespace ledgerbench {
+namespace veribench {
 
 struct CCFPromise : public Promise {
   size_t size() {return 1;}
@@ -62,6 +62,6 @@ class CCF : public DB {
   long latest_commit;
 };
 
-}  // namespace ledgerbench
+}  // namespace veribench
 
 #endif  // DBADAPTER_CCF_H

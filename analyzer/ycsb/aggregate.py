@@ -23,7 +23,7 @@ outpath = sys.argv[2]
 for f in glob(path + "/client*log"):
   with open(f, "r") as fp:
     lines = fp.read().splitlines()
-    print(f + "\n" + lines[11] + ", " + lines[12] + "\n")
+    print(f + "\n" + lines[13] + ", " + lines[14] + "\n")
     numSuccess = numSuccess + float(lines[0])
     sumSuccess = sumSuccess + float(lines[1])
     numTotal = numTotal + float(lines[2])

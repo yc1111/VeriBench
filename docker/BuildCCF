@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+# install dependencies
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+    gcc-9 g++-9 \
+    make cmake \
+    git \
+    libboost-all-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libtbb-dev
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
+ENV LIBRARY_PATH=/usr/local/lib:usr/lib
+ENV CMAKE_LIBRARY_PATH=/usr/local/lib:/usr/lib
+ENV CMAKE_INCLUDE_PATH=/usr/local/include:/usr/include
+ENV CPATH=/usr/include/c++/9
+
+# copy veribench
+ADD . /home/VeriBench
+
+WORKDIR /home/VeriBench
+
+RUN cd /home/VeriBench && mkdir build && \
+    cd build && \
+    cmake -DSYSTEM=CCF .. && \
+    make

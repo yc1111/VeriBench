@@ -3,13 +3,14 @@
 #include <chrono>
 #include <fstream>
 #include <map>
+#include <set>
 #include <numeric>
 #include <sys/time.h>
 #include <iostream>
 
 #include "boost/algorithm/string.hpp"
 
-namespace ledgerbench {
+namespace veribench {
 
 TPCC::TPCC() {
   timeval t0;
@@ -38,13 +39,13 @@ std::unique_ptr<Task> TPCC::NextTask() {
 
 int TPCC::ExecuteTxn(Task* task, DB* client, Promise* promise) {
   const TPCCTask* t = static_cast<const TPCCTask*>(task);
-  if (t->op == 0) {
+  if (t->op == OpType::kTPCC_NEWORDER) {
     return execNewOrder(t, client, promise);
-  } else if (t->op == 1) {
+  } else if (t->op == OpType::kTPCC_PAYMENT) {
     return execPayment(t, client, promise);
-  } else if (t->op == 2) {
+  } else if (t->op == OpType::kTPCC_ORDERSTATUS) {
     return execOrderStatus(t, client, promise);
-  } else if (t->op == 3) {
+  } else if (t->op == OpType::kTPCC_DELIVERY) {
     return execDelivery(t, client, promise);
   } else {
     return execStockLevel(t, client, promise);
@@ -530,4 +531,4 @@ int TPCC::StoredProcedure(Task* task, DB* db, Promise* promise) {
   return db->StoredProcedure(t->keys, task->op, promise);
 }
 
-}  // namespace ledgerbench
+}  // namespace veribench

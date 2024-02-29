@@ -1,0 +1,45 @@
+FROM ubuntu:22.04
+
+# install dependencies
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+    gcc-9 g++-9 \
+    make cmake \
+    git \
+    libboost-all-dev \
+    libcrypto++-dev \
+    libssl-dev \
+    libtbb-dev \
+    libprotoc-dev \
+    wget
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+
+RUN mkdir -p /usr/src && cd /usr/src && \
+    wget https://go.dev/dl/go1.20.5.linux-amd64.tar.gz && \
+    tar xvf go1.20.5.linux-amd64.tar.gz
+
+ENV PATH=/usr/src/go/bin:$PATH
+ENV GOROOT=/usr/src/go
+ENV GOPATH=/root/go
+
+RUN cd /home && git clone https://github.com/ucbrise/MerkleSquare.git && \
+    cd MerkleSquare && \
+    go mod init ucbrise/merkle2 && \
+    go mod tidy
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
+ENV LIBRARY_PATH=/usr/local/lib:usr/lib
+ENV CMAKE_LIBRARY_PATH=/usr/local/lib:/usr/lib
+ENV CMAKE_INCLUDE_PATH=/usr/local/include:/usr/include
+ENV CPATH=/usr/include/c++/9
+ 
+# copy veribench
+ADD . /home/VeriBench
+
+WORKDIR /home/VeriBench
+
+RUN cd /home/VeriBench && mkdir build && \
+    cd build && \
+    cmake -DSYSTEM=MERKLE2 .. && \
+    make

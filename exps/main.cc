@@ -1,23 +1,39 @@
 #include <time.h>
 #include <future>
+#include <iostream>
+#include <sys/time.h>
+#include <unistd.h>
 
 #include "tbb/concurrent_queue.h"
 
-#include "dbadapter.h"
-#include "ledgerdb/ledgerdb.h"
-#include "ccf/ccf.h"
-#include "merkle2/merkle2.h"
 #include "workload.h"
 #include "ycsb/ycsb.h"
 #include "tpcc/tpcc.h"
 #include "smallbank/smallbank.cc"
+#include "dbadapter.h"
+
+#ifdef USE_QLDB
+  #include "qldb/qldb.h"
+#endif
+#ifdef USE_SQLLEDGER
+  #include "sqlledger/sqlledger.h"
+#endif
+#ifdef USE_LEDGERDB
+  #include "ledgerdb/ledgerdb.h"
+#endif
+#ifdef USE_CCF
+  #include "ccf/ccf.h"
+#endif
+#ifdef USE_MERKLE2
+  #include "merkle2/merkle2.h"
+#endif
 
 using namespace std;
 
 bool running = true;
 
-tbb::concurrent_queue<std::unique_ptr<ledgerbench::Task>> task_queue;
-std::unique_ptr<ledgerbench::Promise> promises;
+tbb::concurrent_queue<std::unique_ptr<veribench::Task>> task_queue;
+std::unique_ptr<veribench::Promise> promises;
 
 void millisleep(size_t t) {
   timespec req;
@@ -26,7 +42,7 @@ void millisleep(size_t t) {
   nanosleep(&req, NULL); 
 }
 
-int taskGenerator(ledgerbench::Workload* wl, int timeout) {
+int taskGenerator(veribench::Workload* wl, int timeout) {
   while (1) {
     millisleep(timeout);
     if (!running) {
@@ -40,7 +56,7 @@ int taskGenerator(ledgerbench::Workload* wl, int timeout) {
   return 0;
 }
 
-int verifyThread(ledgerbench::DB* db, size_t delay) {
+int verifyThread(veribench::DB* db, size_t delay) {
   while (1) {
     millisleep(delay);
     if (!running) {
@@ -60,18 +76,18 @@ int verifyThread(ledgerbench::DB* db, size_t delay) {
 
     fprintf(stderr, "%ld %ld.%06ld %ld.%06ld %ld %d %d\n", promises->size(),
         t0.tv_sec, t0.tv_usec, t1.tv_sec, t1.tv_usec, latency, vs?0:1,
-        ledgerbench::OpType::kVERIFY);
+        veribench::OpType::kVERIFY);
   }
   return 0;
 }
 
-int txnThread(ledgerbench::Workload* wl, ledgerbench::DB* db, int duration, int mode) {
+int txnThread(veribench::Workload* wl, veribench::DB* db, int duration, int mode) {
   size_t nTransactions = 0;
   timeval t0, t1, t2;
   gettimeofday(&t0, NULL);
 
   while (1) {
-    std::unique_ptr<ledgerbench::Task> task;
+    std::unique_ptr<veribench::Task> task;
     while (!task_queue.try_pop(task));
 
     gettimeofday(&t1, NULL);
@@ -224,25 +240,36 @@ int main(int argc, char **argv) {
     }
   }
   
-  std::unique_ptr<ledgerbench::DB> db;
-  if (system.compare("ledgerdb") == 0) {
-    db.reset(new ledgerbench::LedgerDB(dbConfigPath));
-    promises.reset(new ledgerbench::LDBPromise());
-  } else if (system.compare("ccf") == 0) {
-    db.reset(new ledgerbench::CCF(dbConfigPath));
-    promises.reset(new ledgerbench::CCFPromise());
-  } else if (system.compare("merkle2") == 0) {
-    db.reset(new ledgerbench::Merkle2(dbConfigPath, n));
-    promises.reset(new ledgerbench::Merkle2Promise());
-  }
+  std::unique_ptr<veribench::DB> db;
+#ifdef USE_QLDB
+    db.reset(new veribench::QLDB(dbConfigPath));
+    promises.reset(new veribench::QLDBPromise());
+#endif
+#ifdef USE_SQLLEDGER
+    db.reset(new veribench::SQLLedger(dbConfigPath));
+    promises.reset(new veribench::SQLLedgerPromise());
+#endif
+#ifdef USE_LEDGERDB
+    db.reset(new veribench::LedgerDB(dbConfigPath));
+    promises.reset(new veribench::LDBPromise());
+#endif
+#ifdef USE_CCF
+    db.reset(new veribench::CCF(dbConfigPath));
+    promises.reset(new veribench::CCFPromise());
+#endif
+#ifdef USE_MERKLE2
+    std::cout << "running merkle2" << std::endl;
+    db.reset(new veribench::Merkle2(dbConfigPath, n));
+    promises.reset(new veribench::Merkle2Promise());
+#endif
 
-  std::unique_ptr<ledgerbench::Workload> wl;
+  std::unique_ptr<veribench::Workload> wl;
   if (workloadType.compare("ycsb") == 0) {
-    wl.reset(new ledgerbench::YCSB(workloadConfigPath));
+    wl.reset(new veribench::YCSB(workloadConfigPath));
   } else if (workloadType.compare("tpcc") == 0) {
-    wl.reset(new ledgerbench::TPCC());
+    wl.reset(new veribench::TPCC());
   } else if (workloadType.compare("smallbank") == 0) {
-    wl.reset(new ledgerbench::SmallBank());
+    wl.reset(new veribench::SmallBank());
   }
 
   db->Init();
