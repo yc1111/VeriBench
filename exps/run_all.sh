@@ -41,24 +41,24 @@ run_fig9 () {
     for i in ${single_txnrate[@]}
     do
       sed -i -e "s/request_rate=[0-9]*/request_rate=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
+      ./run_docker.sh
+      if [ $db = "ccf" ]; then
+        mv $db_config_dir/tid $res_dir/$db/ycsb/txnrate$i
       else
-        ./run_docker.sh
+        mv $res_dir/$db/result $res_dir/$db/ycsb/txnrate$i
       fi
-      mv $res_dir/$db/result $res_dir/$db/ycsb/txnrate$i
     done
 
     #9 d
     for i in ${wperc[@]}
     do
       sed -i -e "s/wlconfig=.*/wlconfig=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
+      ./run_docker.sh
+      if [ $db = "ccf" ]; then
+        mv $db_config_dir/tid $res_dir/$db/ycsb/txnrate$i
       else
-        ./run_docker.sh
+        mv $res_dir/$db/result $res_dir/$db/ycsb/txnrate$i
       fi
-      mv $res_dir/$db/result $res_dir/$db/ycsb/$i
     done
     sed -i -e "s/wlconfig=.*/wlconfig=balanced/" conf.sh
   done
@@ -84,11 +84,7 @@ run_fig10 () {
     for i in ${txnrate[@]}
     do
       sed -i -e "s/request_rate=[0-9]*/request_rate=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/ycsb/txnrate$i
     done
 
@@ -96,11 +92,7 @@ run_fig10 () {
     for i in ${nodes[@]}
     do
       sed -i -e "s/nshard=[0-9]*/nshard=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/ycsb/node$i
     done
     sed -i -e "s/nshard=[0-9]*/nshard=16/" conf.sh
@@ -109,11 +101,7 @@ run_fig10 () {
     for i in ${wperc[@]}
     do
       sed -i -e "s/wlconfig=.*/wlconfig=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/ycsb/$i
     done
     sed -i -e "s/wlconfig=.*/wlconfig=balanced/" conf.sh
@@ -138,11 +126,7 @@ run_fig11 () {
     for i in ${zipf[@]}
     do
       sed -i -e "s/wlconfig=.*/wlconfig=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/ycsb/$i
     done
   done
@@ -165,11 +149,7 @@ run_fig12 () {
     for i in ${txnrate[@]}
     do
       sed -i -e "s/request_rate=[0-9]*/request_rate=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/smallbank/txnrate$i
     done
   done
@@ -193,11 +173,7 @@ run_fig13 () {
     for i in ${small_rate[@]}
     do
       sed -i -e "s/request_rate=[0-9]*/request_rate=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/tpcc/txnrate$i
     done
   done
@@ -221,11 +197,7 @@ run_fig14 () {
     for i in ${range[@]}
     do
       sed -i -e "s/wlconfig=.*/wlconfig=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/range/$i
     done
   done
@@ -250,11 +222,7 @@ run_fig15 () {
     for i in ${txnrate[@]}
     do
       sed -i -e "s/request_rate=[0-9]*/request_rate=$i/" conf.sh
-      if [ $db = "ccf" ] || [ $db = "merkle2" ]; then
-        ./run_exps.sh
-      else
-        ./run_docker.sh
-      fi
+      ./run_docker.sh
       mv $res_dir/$db/result $res_dir/$db/provenance/$i
     done
   done
