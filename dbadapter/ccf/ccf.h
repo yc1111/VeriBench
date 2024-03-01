@@ -51,7 +51,7 @@ class CCF : public DB {
       size_t nmemb, void* userp);
   
   size_t GetLatestCommit();
-  long HandleProvenance(int seq);
+  long HandleProvenance(std::string key, int seq);
 
   CURL* curl;
   CURL* verifier;

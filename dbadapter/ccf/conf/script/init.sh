@@ -1,6 +1,7 @@
 host=$1
 path=$2
 workload=$3
+wlconfig=$4
 
 # activate member
 curl https://${host}/gov/ack/update_state_digest -X POST \
@@ -36,11 +37,6 @@ $path/script/scurl.sh https://${host}/gov/proposals \
 
 sleep 5
 
-curl https://${host}/app/commit -X GET \
-    --cacert $path/external/service_cert.pem \
-    --key $path/script/user0_privk.pem \
-    --cert $path/script/user0_cert.pem  > $path/tid
-
 if [ "$workload" = "tpcc" ]; then
   echo "init data for tpcc"
   for i in {0..51}
@@ -71,3 +67,8 @@ elif [ "$workload" = "ycsb" ]; then
       --cert $path/script/user0_cert.pem
   done
 fi
+
+curl https://${host}/app/commit -X GET \
+    --cacert $path/external/service_cert.pem \
+    --key $path/script/user0_privk.pem \
+    --cert $path/script/user0_cert.pem  > $path/tid

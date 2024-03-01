@@ -8,10 +8,12 @@
 workload=ycsb
 
 # configuration file name under workload/<workload>/conf/ folder, if any
-wlconfig=balanced
+wlconfig=pbalanced
+
+nversion=10
 
 # workload init data file path, if any
-initdata="/home/tpcc/tpcc"
+initdata="/home/VeriBench/data/tpcc"
 
 ###########################
 # database configurations

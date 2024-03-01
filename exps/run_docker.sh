@@ -44,6 +44,8 @@ do
   ssh $host "$exp_dir/docker_wait_client.sh"
 done
 
+$db_config_dir/docker_stop.sh
+
 # Process logs
 $ana_dir/run_analyzer.sh
 

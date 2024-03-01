@@ -107,13 +107,11 @@ int CCF::StoredProcedure(std::vector<std::string> params, const OpType& type,
       break;
     case OpType::kPROVENANCE:
     {
-      int latest = 21;
+      int latest = latest_commit;
       int i = stoi(params[3]);
       while (i > 0 && latest > 0) {
-        auto status = HandleProvenance(21);
-        if (status == 200) {
-          i--;
-        }
+        auto status = HandleProvenance(params[1], latest);
+        i--;
         latest--;
       }
       return 0;
@@ -211,7 +209,7 @@ size_t CCF::WriteCallback(void *contents, size_t size,
   return size * nmemb;
 }
 
-long CCF::HandleProvenance(int seq) {
+long CCF::HandleProvenance(std::string key, int seq) {
   CURLcode res;
   struct curl_slist* headers;
   std::string readBuffer;
@@ -219,7 +217,7 @@ long CCF::HandleProvenance(int seq) {
   headers = curl_slist_append(headers, "Content-Type: application/json");
   std::string tid_header = "x-ms-ccf-transaction-id: 2." + std::to_string(seq);
   headers = curl_slist_append(headers, tid_header.c_str());
-  std::string address = "https://" + host + "/app/historical";
+  std::string address = "https://" + host + "/app/historical?key=" + key;
   long http_code = 0;
 
   curl_easy_setopt(curl, CURLOPT_URL, address.c_str());
@@ -231,9 +229,9 @@ long CCF::HandleProvenance(int seq) {
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
   res = curl_easy_perform(curl);
-  while (http_code != 200 || http_code != 204) {
-    res = curl_easy_perform(curl);
-  }
+  // while (http_code != 200 && http_code != 204) {
+  //   res = curl_easy_perform(curl);
+  // }
   curl_easy_reset(curl);
   return http_code;
 }

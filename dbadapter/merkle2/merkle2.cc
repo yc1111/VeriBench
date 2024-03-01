@@ -34,7 +34,7 @@ Merkle2::~Merkle2() {
 
 void Merkle2::Init() {
   std::vector<std::string> keys, vals;
-  for (int i = 0; i <= 10; ++i) {
+  for (int i = 0; i <= 625; ++i) {
     keys.emplace_back(clientid + std::to_string(i));
     vals.emplace_back(std::to_string(i));
   }

@@ -44,6 +44,6 @@ start_server tss shard.tss.config "/usr/local/bin/timeserver"
 for ((n=0; n<$nshard; n++))
 do
   echo "Starting shard$i replicas.."
-  start_server shard$n shard$n.config "/usr/local/bin/strongstore -m occ -w $workload -v 1 -k 100000 -f $initdata -e 0 -s 0 -N $nshard -n $n -t $blocktime"
+  start_server shard$n shard$n.config "/usr/local/bin/strongstore -m occ -w $workload -v $nversion -k 100000 -f $initdata -e 0 -s 0 -N $nshard -n $n -t $blocktime"
 done
 

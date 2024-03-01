@@ -3,5 +3,5 @@ readpercentage=0
 writepercentage=0
 provenancepercentage=0
 rangepercentage=100
-rangesize=1000
+rangesize=100
 theta=0

@@ -30,7 +30,7 @@ RUN mkdir -p /usr/src && \
 RUN cd /usr/src && \
     git clone https://github.com/nusdbsystem/LedgerDatabase.git && \
     cd LedgerDatabase && mkdir build && cd build && \
-    cmake -DLEDGERDB=OFF -DSQLLEDGER=ON -DQLDB=OFF .. && \
+    cmake -DLEDGERDB=OFF -DSQLLEDGER=ON -DAMZQLDB=OFF .. && \
     make -j10 && make install
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib

@@ -15,9 +15,9 @@ do
 done
 
 sleep 5
-$db_config_dir/script/init.sh $primary:8080 $db_config_dir $workload
+$db_config_dir/script/init.sh $primary:8080 $db_config_dir $workload $wlconfig
 
-echo -e "host=$primary:8080\nservice_cert=$db_config_dir/external/service_cert.pem\nuser_cert=$db_config_dir/script/user0_cert.pem\nuser_key=$db_config_dir/script/user0_privk.pem" > $db_config_dir/config.properties
+echo -e "host=${primary}:8080\nservice_cert=/home/dbconfig/external/service_cert.pem\nuser_cert=/home/dbconfig/script/user0_cert.pem\nuser_key=/home/dbconfig/script/user0_privk.pem" > $db_config_dir/config.properties
 for host in `cat $exp_dir/clients`
 do
   rsync $db_config_dir/config.properties $host:$db_config_dir/
