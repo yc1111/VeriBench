@@ -21,6 +21,9 @@
 #ifdef USE_LEDGERDB
   #include "ledgerdb/ledgerdb.h"
 #endif
+#ifdef USE_GLASSDB
+  #include "glassdb/glassdb.h"
+#endif
 #ifdef USE_CCF
   #include "ccf/ccf.h"
 #endif
@@ -252,6 +255,10 @@ int main(int argc, char **argv) {
 #ifdef USE_LEDGERDB
     db.reset(new veribench::LedgerDB(dbConfigPath));
     promises.reset(new veribench::LDBPromise());
+#endif
+#ifdef USE_GLASSDB
+    db.reset(new veribench::GlassDB(dbConfigPath));
+    promises.reset(new veribench::GlassDBPromise());
 #endif
 #ifdef USE_CCF
     db.reset(new veribench::CCF(dbConfigPath));
