@@ -18,9 +18,11 @@ run_fig9 () {
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
   sed -i -e "s/request_rate=[0-9]*/request_rate=10/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=300/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=300/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf merkle2)
-  txnrate=(10)
+  txnrate=(1 4 7 10)
 
   sys=$( IFS=$','; echo "${systems[*]}" )
   txns=$( IFS=$','; echo "${txnrate[*]}" )
@@ -66,9 +68,11 @@ run_fig10 () {
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
   sed -i -e "s/request_rate=[0-9]*/request_rate=120/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=100/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=100/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf)
-  txnrate=(120)
+  txnrate=(10 50 90 120)
   nshard=(2 8 16)
 
   sys=$( IFS=$','; echo "${systems[*]}" )
@@ -124,6 +128,8 @@ run_fig11 () {
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
   sed -i -e "s/request_rate=[0-9]*/request_rate=120/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=100/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=100/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf)
   zipf=(zipf-0.9 zipf-1.5)
@@ -157,9 +163,11 @@ run_fig12 () {
   sed -i -e "s/nshard=[0-9]*/nshard=16/" conf.sh
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=100/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=100/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf)
-  txnrate=(120)
+  txnrate=(10 50 90 120)
 
   sys=$( IFS=$','; echo "${systems[*]}" )
   txns=$( IFS=$','; echo "${txnrate[*]}" )
@@ -190,9 +198,11 @@ run_fig13 () {
   sed -i -e "s/nshard=[0-9]*/nshard=16/" conf.sh
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=100/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=100/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf)
-  txnrate=(20)
+  txnrate=(5 10 15 20)
 
   sys=$( IFS=$','; echo "${systems[*]}" )
   txns=$( IFS=$','; echo "${txnrate[*]}" )
@@ -223,6 +233,8 @@ run_fig14 () {
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
   sed -i -e "s/request_rate=[0-9]*/request_rate=16/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=100/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=100/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf)
   range=(range-10 range-100 range-1000)
@@ -245,21 +257,23 @@ run_fig14 () {
       mv $res_dir/result $res_dir/${db}_${i}
     done
   done
-  python parse_wl.py $res_dir $systems $ranges fig14a
-  python parse_lat_op.py $res_dir $sys $txns range,verify 8,10 fig14b
+  python parse_wl.py $res_dir $sys $ranges fig14a
+  python parse_lat_op.py $res_dir $sys $ranges range,verify 8,10 fig14b
   clean
 }
 
 run_fig15 () {
   sed -i -e "s/workload=.*/workload=ycsb/" conf.sh
   sed -i -e "s/wlconfig=.*/wlconfig=provenance/" conf.sh
-  sed -i -e "s/nversion=[0-9]*/nversion=10/" conf.sh
+  sed -i -e "s/nversion=[0-9]*/nversion=20/" conf.sh
   sed -i -e "s/nshard=[0-9]*/nshard=16/" conf.sh
   sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
   sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=100/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=100/" conf.sh
 
   systems=(qldb ledgerdb sqlledger glassdb ccf)
-  txnrate=(32)
+  txnrate=(8 16 24 32)
 
   sys=$( IFS=$','; echo "${systems[*]}" )
   txns=$( IFS=$','; echo "${txnrate[*]}" )
@@ -273,7 +287,7 @@ run_fig15 () {
       sed -i -e "s/mode=.*/mode=-i/" conf.sh
     fi
 
-    for i in ${small_rate[@]}
+    for i in ${txnrate[@]}
     do
       sed -i -e "s/request_rate=[0-9]*/request_rate=$i/" conf.sh
       ./run_docker.sh
@@ -286,6 +300,50 @@ run_fig15 () {
   clean
 }
 
+run_fig16 () {
+  sed -i -e "s/workload=.*/workload=ycsb/" conf.sh
+  sed -i -e "s/wlconfig=.*/wlconfig=balanced/" conf.sh
+  sed -i -e "s/nversion=[0-9]*/nversion=1/" conf.sh
+  sed -i -e "s/nshard=[0-9]*/nshard=16/" conf.sh
+  sed -i -e "s/nclient=[0-9]*/nclient=20/" conf.sh
+  sed -i -e "s/nthread=[0-9]*/nthread=10/" conf.sh
+  sed -i -e "s/delay=[0-9]*/delay=10/" conf.sh
+  sed -i -e "s/blocktime=[0-9]*/blocktime=10/" conf.sh
+  sed -i -e "s/request_rate=[0-9]*/request_rate=120/" conf.sh
+
+  systems=(ledgerdb sqlledger glassdb)
+  delay=(10 20 30 40 50)
+  blocktime=(10 20 30 40 50)
+
+  sys=$( IFS=$','; echo "${systems[*]}" )
+
+  for db in ${systems[@]}
+  do
+    sed -i -e "s/database=.*/database=${db}/" conf.sh
+    if [ $db = "ccf" ]; then
+      sed -i -e "s/mode=.*/mode=-p/" conf.sh
+    else
+      sed -i -e "s/mode=.*/mode=-i/" conf.sh
+    fi
+
+    sed -i -e "s/blocktime=[0-9]*/blocktime=10/" conf.sh
+    for i in ${delay[@]}
+    do
+      sed -i -e "s/delay=[0-9]*/delay=$i/" conf.sh
+      ./run_docker.sh
+      mv $res_dir/result $res_dir/${db}_delay${i}
+    done
+
+    sed -i -e "s/delay=[0-9]*/delay=1280/" conf.sh
+    for i in ${blocktime[@]}
+    do
+      sed -i -e "s/blocktime=[0-9]*/blocktime=$i/" conf.sh
+      ./run_docker.sh
+      mv $res_dir/result $res_dir/${db}_blocktime${i}
+    done
+  done
+}
+
 run_fig9
 run_fig10
 run_fig11
@@ -293,3 +351,4 @@ run_fig12
 run_fig13
 run_fig14
 run_fig15
+run_fig16

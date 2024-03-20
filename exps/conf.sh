@@ -8,9 +8,9 @@
 workload=ycsb
 
 # configuration file name under workload/<workload>/conf/ folder, if any
-wlconfig=pbalanced
+wlconfig=balanced
 
-nversion=10
+nversion=1
 
 # workload init data file path, if any
 initdata="/home/VeriBench/data/tpcc"
@@ -20,7 +20,7 @@ initdata="/home/VeriBench/data/tpcc"
 ###########################
 
 # database name (same as the folder name under dbadaptor/)
-database=merkle2
+database=qldb
 
 # configuratino file name under dbadapter/<database>/conf/ folder, if any
 dbconfig="config.properties"
@@ -33,7 +33,7 @@ mode=-i
 ###########################
 
 # number of shards
-nshard=1
+nshard=16
 
 # number of client process per client node
 nclient=20
@@ -42,7 +42,7 @@ nclient=20
 nthread=10
 
 # task generation rate for each thread
-request_rate=1
+request_rate=120
 
 # experiment duration
 duration=120
@@ -57,7 +57,7 @@ blocktime=100
 wait_boot=10
 
 # node to start exp and collect results
-master=10.10.10.206
+master=
 
 ###########################
 # path configurations
@@ -67,7 +67,7 @@ master=10.10.10.206
 log_dir="/data/yc/veribench/logs"
 
 # result path
-res_dir="/data/yc/veribench/results/$database"
+res_dir="/data/yc/veribench/results"
 
 ###########################
 # default environment value
